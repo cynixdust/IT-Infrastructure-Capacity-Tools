@@ -1,0 +1,5 @@
+{
+  "name": "IT Infrastructure Capacity Tools",
+  "description": "A comprehensive suite for planning and analyzing IT infrastructure capacity, including vCPU, Physical CPU, Subnetting, and Storage.",
+  "requestFramePermissions": []
+}
