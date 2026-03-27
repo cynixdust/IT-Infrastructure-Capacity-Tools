@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PRTG Infrastructure Calculator</title>
+    <title>SABA IT Infrastructure Calculator</title>
     <!-- Tailwind CSS Play CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts -->
@@ -13,8 +13,8 @@
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://unpkg.com/lucide-react@latest"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script src="https://unpkg.com/lucide-react@latest/dist/umd/lucide-react.min.js"></script>
     <!-- Recharts -->
     <script src="https://unpkg.com/recharts/umd/Recharts.js"></script>
     <!-- jsPDF and SheetJS -->
@@ -22,7 +22,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <!-- Framer Motion (Motion) -->
-    <script src="https://unpkg.com/framer-motion/dist/framer-motion.js"></script>
+    <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
 
     <style>
         :root {
@@ -170,15 +170,30 @@
     </style>
 </head>
 <body>
-    <div id="root"></div>
+    <div id="root">
+        <div id="loading" class="flex items-center justify-center min-h-screen font-sans text-gray-500">
+            <div class="flex flex-col items-center gap-4">
+                <div class="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                <p>Initializing SABA IT Infrastructure Calculator...</p>
+            </div>
+        </div>
+    </div>
 
     <script type="text/babel">
         const { useState, useEffect, useMemo, useRef } = React;
+        
+        // Fix global names for UMD builds
         const { 
             LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area,
             BarChart, Bar, Cell, PieChart, Pie
-        } = Recharts;
-        const { motion, AnimatePresence } = FramerMotion;
+        } = window.Recharts || {};
+        
+        // Framer Motion global is usually 'Motion' or 'framerMotion'
+        const Motion = window.Motion || window.framerMotion || {};
+        const { motion, AnimatePresence } = Motion;
+
+        // Lucide React global
+        const LucideIcons = window.LucideReact || {};
 
         // --- Utility Functions ---
         function ipToNum(ip) {
@@ -358,7 +373,7 @@
         // --- Components ---
 
         const Icon = ({ name, size = 20, className = "" }) => {
-            const LucideIcon = LucideReact[name];
+            const LucideIcon = LucideIcons[name];
             if (!LucideIcon) return null;
             return <LucideIcon size={size} className={className} />;
         };
