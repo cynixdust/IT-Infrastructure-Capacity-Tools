@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PRTG Infrastructure Calculator</title>
+    <!-- Tailwind CSS Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- React, ReactDOM, Babel -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/lucide-react@latest"></script>
+    <!-- Recharts -->
+    <script src="https://unpkg.com/recharts/umd/Recharts.js"></script>
+    <!-- jsPDF and SheetJS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <!-- Framer Motion (Motion) -->
+    <script src="https://unpkg.com/framer-motion/dist/framer-motion.js"></script>
+
+    <style>
+        :root {
+            --bg-primary: #f5f5f5;
+            --bg-secondary: #ffffff;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666666;
+            --border-color: #e5e5e5;
+            --accent-color: #00a0e3;
+            --accent-hover: #008cc7;
+            --status-ok: #5cb85c;
+            --status-hi: #f0ad4e;
+            --status-ov: #d9534f;
+            --card-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .theme-dark {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2d2d2d;
+            --text-primary: #f5f5f5;
+            --text-secondary: #a0a0a0;
+            --border-color: #404040;
+            --accent-color: #00a0e3;
+            --accent-hover: #008cc7;
+            --status-ok: #5cb85c;
+            --status-hi: #f0ad4e;
+            --status-ov: #d9534f;
+            --card-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+
+        .theme-slate {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --border-color: #334155;
+            --accent-color: #38bdf8;
+            --accent-hover: #0ea5e9;
+            --status-ok: #22c55e;
+            --status-hi: #f59e0b;
+            --status-ov: #ef4444;
+            --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .theme-emerald {
+            --bg-primary: #064e3b;
+            --bg-secondary: #065f46;
+            --text-primary: #ecfdf5;
+            --text-secondary: #a7f3d0;
+            --border-color: #047857;
+            --accent-color: #10b981;
+            --accent-hover: #059669;
+            --status-ok: #34d399;
+            --status-hi: #fbbf24;
+            --status-ov: #f87171;
+            --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+        }
+
+        .theme-amber {
+            --bg-primary: #451a03;
+            --bg-secondary: #78350f;
+            --text-primary: #fffbeb;
+            --text-secondary: #fde68a;
+            --border-color: #92400e;
+            --accent-color: #f59e0b;
+            --accent-hover: #d97706;
+            --status-ok: #10b981;
+            --status-hi: #fbbf24;
+            --status-ov: #ef4444;
+            --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .prtg-card {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .prtg-header {
+            background-color: var(--bg-secondary);
+            border-bottom: 2px solid var(--accent-color);
+        }
+
+        .prtg-tab-active {
+            border-bottom: 3px solid var(--accent-color);
+            color: var(--accent-color);
+        }
+
+        .prtg-input {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .prtg-button {
+            background-color: var(--accent-color);
+            color: white;
+            transition: background-color 0.2s;
+        }
+
+        .prtg-button:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .status-ok { color: var(--status-ok); }
+        .status-hi { color: var(--status-hi); }
+        .status-ov { color: var(--status-ov); }
+
+        .bg-status-ok { background-color: var(--status-ok); }
+        .bg-status-hi { background-color: var(--status-hi); }
+        .bg-status-ov { background-color: var(--status-ov); }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-secondary);
+        }
+
+        .recharts-cartesian-grid-horizontal line,
+        .recharts-cartesian-grid-vertical line {
+            stroke: var(--border-color);
+        }
+
+        .recharts-text {
+            fill: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useMemo, useRef } = React;
+        const { 
+            LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area,
+            BarChart, Bar, Cell, PieChart, Pie
+        } = Recharts;
+        const { motion, AnimatePresence } = FramerMotion;
+
+        // --- Utility Functions ---
+        function ipToNum(ip) {
+            return ip.split('.').reduce((a, o) => (a << 8) | +o, 0) >>> 0;
+        }
+
+        function numToIp(n) {
+            return [(n >>> 24) & 255, (n >>> 16) & 255, (n >>> 8) & 255, n & 255].join('.');
+        }
+
+        function prefixToMask(p) {
+            return p === 0 ? 0 : (0xFFFFFFFF << (32 - p)) >>> 0;
+        }
+
+        function calculateVcpu(vcpu, freq, util) {
+            const capacity = vcpu * freq;
+            const utilization = (util / capacity) * 100;
+            const headroom = capacity - util;
+            let status;
+            if (utilization <= 80) {
+                status = { cls: 'ok', label: 'Normal', msg: 'Workload is within allocated capacity.' };
+            } else if (utilization <= 100) {
+                status = { cls: 'hi', label: 'High', msg: 'Utilization is elevated. Monitor closely.' };
+            } else {
+                status = { cls: 'ov', label: 'Overutilized', msg: 'Workload demand exceeds allocated capacity — possible contention or overcommitment.' };
+            }
+            return { capacity, observed: util, utilization, headroom, status };
+        }
+
+        function calculatePcpu(sockets, cores, threads, freq, utilPct, tdp) {
+            const totalCores = sockets * cores;
+            const totalLogical = totalCores * threads;
+            const peakGhz = totalLogical * freq;
+            const usedGhz = peakGhz * (utilPct / 100);
+            const estPower = tdp !== null ? sockets * tdp * (utilPct / 100) : null;
+            let status;
+            if (utilPct <= 80) {
+                status = { cls: 'ok', label: 'Normal', msg: 'Workload is within allocated capacity.' };
+            } else if (utilPct <= 100) {
+                status = { cls: 'hi', label: 'High', msg: 'Utilization is elevated. Monitor closely.' };
+            } else {
+                status = { cls: 'ov', label: 'Overutilized', msg: 'Workload demand exceeds allocated capacity — possible contention or overcommitment.' };
+            }
+            return { totalCores, totalLogical, peakGhz, usedGhz, utilization: utilPct, estPower, status };
+        }
+
+        function calculateSubnet(ipStr, maskStr) {
+            const parseMask = (mk) => {
+                mk = mk.trim();
+                if (/^\/?\d{1,2}$/.test(mk)) {
+                    const p = parseInt(mk.replace('/', ''));
+                    return (p >= 0 && p <= 32) ? p : null;
+                }
+                if (/^(\d{1,3}\.){3}\d{1,3}$/.test(mk)) {
+                    const parts = mk.split('.').map(Number);
+                    if (parts.some(p => p > 255)) return null;
+                    const bin = parts.map(p => p.toString(2).padStart(8, '0')).join('');
+                    if (!/^1*0*$/.test(bin)) return null;
+                    return bin.split('').filter(b => b === '1').length;
+                }
+                return null;
+            };
+
+            const prefix = parseMask(maskStr);
+            if (prefix === null) return null;
+
+            const maskNum = prefixToMask(prefix);
+            const ipNum = ipToNum(ipStr);
+            const networkNum = ipNum & maskNum;
+            const broadcastNum = networkNum | (~maskNum >>> 0);
+            const firstHost = prefix < 31 ? networkNum + 1 : networkNum;
+            const lastHost = prefix < 31 ? broadcastNum - 1 : broadcastNum;
+            const totalHosts = Math.pow(2, 32 - prefix);
+            const usableHosts = prefix <= 30 ? totalHosts - 2 : prefix === 31 ? 2 : 1;
+            const wildcardNum = ~maskNum >>> 0;
+            const binMask = maskNum.toString(2).padStart(32, '0').match(/.{8}/g).join('.');
+
+            const getIpClass = (first) => {
+                if (first < 128) return 'A';
+                if (first < 192) return 'B';
+                if (first < 224) return 'C';
+                if (first < 240) return 'D (Multicast)';
+                return 'E (Reserved)';
+            };
+
+            const getIpType = (ip) => {
+                const [a, b] = ip.split('.').map(Number);
+                if (a === 10) return 'Private (RFC1918)';
+                if (a === 172 && b >= 16 && b <= 31) return 'Private (RFC1918)';
+                if (a === 192 && b === 168) return 'Private (RFC1918)';
+                if (a === 127) return 'Loopback';
+                if (a === 169 && b === 254) return 'Link-Local (APIPA)';
+                if (a >= 224 && a <= 239) return 'Multicast';
+                return 'Public';
+            };
+
+            const splits = [];
+            const splitPrefix = Math.max(prefix, 24);
+            const splitCount = Math.pow(2, splitPrefix - prefix);
+            const blockSize = Math.pow(2, 32 - splitPrefix);
+            const rows = Math.min(splitCount, 64);
+
+            for (let i = 0; i < rows; i++) {
+                const netN = networkNum + i * blockSize;
+                const bcN = netN + blockSize - 1;
+                const fh = splitPrefix < 31 ? netN + 1 : netN;
+                const lh = splitPrefix < 31 ? bcN - 1 : bcN;
+                const h = splitPrefix <= 30 ? blockSize - 2 : blockSize;
+                splits.push({
+                    cidr: `/${splitPrefix}`,
+                    hosts: h,
+                    network: numToIp(netN),
+                    broadcast: numToIp(bcN),
+                    firstHost: numToIp(fh),
+                    lastHost: numToIp(lh)
+                });
+            }
+
+            return {
+                network: numToIp(networkNum),
+                broadcast: numToIp(broadcastNum),
+                mask: numToIp(maskNum),
+                wildcard: numToIp(wildcardNum),
+                cidr: `/${prefix}`,
+                range: `${numToIp(firstHost)} — ${numToIp(lastHost)}`,
+                hosts: usableHosts,
+                ipClass: getIpClass(+ipStr.split('.')[0]),
+                binMask,
+                ipType: getIpType(ipStr),
+                splits
+            };
+        }
+
+        function calculateStorage(drives, cap, raid, used, overhead, unit) {
+            const factor = unit === 'GB' ? 1024 : 1;
+            const capTB = cap / factor;
+            const usedTB = used / factor;
+            const rawTB = drives * capTB;
+            
+            const getRaidUsable = (raw, drives, raid) => {
+                switch (raid) {
+                    case '0': return raw;
+                    case '1': return raw / 2;
+                    case '5': return raw * (drives - 1) / drives;
+                    case '6': return raw * (drives - 2) / drives;
+                    case '10': return raw / 2;
+                    case 'none': return raw;
+                    default: return raw;
+                }
+            };
+
+            const usableTB = getRaidUsable(rawTB, drives, raid);
+            const netAvailTB = usableTB * (1 - overhead / 100);
+            const freeTB = Math.max(netAvailTB - usedTB, 0);
+            const utilization = (usedTB / netAvailTB) * 100;
+
+            let status;
+            if (utilization <= 70) {
+                status = { cls: 'ok', label: 'Normal', msg: 'Storage utilization is healthy with adequate headroom.' };
+            } else if (utilization <= 85) {
+                status = { cls: 'hi', label: 'High', msg: 'Utilization is elevated. Plan for capacity expansion.' };
+            } else {
+                status = { cls: 'ov', label: 'Critical', msg: 'Storage is critically full. Immediate expansion or cleanup required.' };
+            }
+
+            return { 
+                raw: rawTB * factor, 
+                usable: usableTB * factor, 
+                netAvail: netAvailTB * factor, 
+                used: usedTB * factor, 
+                free: freeTB * factor, 
+                utilization, 
+                status 
+            };
+        }
+
+        // --- Components ---
+
+        const Icon = ({ name, size = 20, className = "" }) => {
+            const LucideIcon = LucideReact[name];
+            if (!LucideIcon) return null;
+            return <LucideIcon size={size} className={className} />;
+        };
+
+        const StatusBadge = ({ status }) => (
+            <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium prtg-card ${
+                status.cls === 'ok' ? 'text-green-600 bg-green-50 border-green-200' :
+                status.cls === 'hi' ? 'text-amber-600 bg-amber-50 border-amber-200' :
+                'text-red-600 bg-red-50 border-red-200'
+            }`}>
+                <div className={`w-2 h-2 rounded-full ${
+                    status.cls === 'ok' ? 'bg-green-500' :
+                    status.cls === 'hi' ? 'bg-amber-500' :
+                    'bg-red-500'
+                }`} />
+                {status.label}
+            </div>
+        );
+
+        const MetricCard = ({ label, value, unit, icon, trend }) => (
+            <div className="prtg-card p-4 flex flex-col gap-1">
+                <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-secondary">
+                    <span>{label}</span>
+                    <Icon name={icon} size={14} />
+                </div>
+                <div className="flex items-baseline gap-1">
+                    <span className="text-2xl font-bold">{value}</span>
+                    <span className="text-sm font-medium text-secondary">{unit}</span>
+                </div>
+                {trend && (
+                    <div className={`text-xs font-medium ${trend > 0 ? 'text-green-500' : 'text-red-500'}`}>
+                        {trend > 0 ? '↑' : '↓'} {Math.abs(trend)}% vs last
+                    </div>
+                )}
+            </div>
+        );
+
+        const ProgressBar = ({ value, label, statusCls }) => (
+            <div className="space-y-1">
+                <div className="flex justify-between text-xs font-medium">
+                    <span className="text-secondary">{label}</span>
+                    <span className="font-bold">{value.toFixed(1)}%</span>
+                </div>
+                <div className="h-3 w-full bg-gray-200 rounded-full overflow-hidden border border-gray-300">
+                    <motion.div 
+                        initial={{ width: 0 }}
+                        animate={{ width: `${Math.min(value, 100)}%` }}
+                        className={`h-full transition-colors duration-500 ${
+                            statusCls === 'ok' ? 'bg-status-ok' :
+                            statusCls === 'hi' ? 'bg-status-hi' :
+                            'bg-status-ov'
+                        }`}
+                        style={{
+                            backgroundImage: 'linear-gradient(to bottom, rgba(255,255,255,0.3), transparent)'
+                        }}
+                    />
+                </div>
+            </div>
+        );
+
+        // --- Main App Component ---
+
+        const App = () => {
+            const [activeTab, setActiveTab] = useState('vcpu');
+            const [theme, setTheme] = useState(localStorage.getItem('prtg-theme') || 'light');
+            const [logo, setLogo] = useState(localStorage.getItem('prtg-logo') || null);
+
+            // State for each tab
+            const [vcpuInputs, setVcpuInputs] = useState({ vcpu: 8, freq: 2.4, util: 12 });
+            const [pcpuInputs, setPcpuInputs] = useState({ sockets: 2, cores: 12, threads: 2, freq: 2.6, utilPct: 45, tdp: 125 });
+            const [subnetInputs, setSubnetInputs] = useState({ ip: '192.168.1.0', mask: '24' });
+            const [storageInputs, setStorageInputs] = useState({ drives: 12, cap: 1.2, raid: '10', used: 4.5, overhead: 15, unit: 'TB' });
+
+            // History state
+            const [history, setHistory] = useState(() => {
+                const saved = localStorage.getItem('prtg-history');
+                return saved ? JSON.parse(saved) : [];
+            });
+
+            useEffect(() => {
+                localStorage.setItem('prtg-theme', theme);
+                document.documentElement.className = theme === 'light' ? '' : `theme-${theme}`;
+            }, [theme]);
+
+            useEffect(() => {
+                localStorage.setItem('prtg-history', JSON.stringify(history));
+            }, [history]);
+
+            const vcpuResult = useMemo(() => calculateVcpu(vcpuInputs.vcpu, vcpuInputs.freq, vcpuInputs.util), [vcpuInputs]);
+            const pcpuResult = useMemo(() => calculatePcpu(pcpuInputs.sockets, pcpuInputs.cores, pcpuInputs.threads, pcpuInputs.freq, pcpuInputs.utilPct, pcpuInputs.tdp), [pcpuInputs]);
+            const subnetResult = useMemo(() => calculateSubnet(subnetInputs.ip, subnetInputs.mask), [subnetInputs]);
+            const storageResult = useMemo(() => calculateStorage(storageInputs.drives, storageInputs.cap, storageInputs.raid, storageInputs.used, storageInputs.overhead, storageInputs.unit), [storageInputs]);
+
+            const handleLogoUpload = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                        const base64 = reader.result;
+                        setLogo(base64);
+                        localStorage.setItem('prtg-logo', base64);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+
+            const addToHistory = (type, data) => {
+                const entry = {
+                    id: Date.now(),
+                    timestamp: new Date().toLocaleString(),
+                    type,
+                    data
+                };
+                setHistory(prev => [entry, ...prev].slice(0, 50));
+            };
+
+            const exportToCSV = () => {
+                let csvContent = "data:text/csv;charset=utf-8,";
+                csvContent += "Timestamp,Type,Metric,Value,Unit\n";
+                
+                history.forEach(entry => {
+                    Object.entries(entry.data).forEach(([key, val]) => {
+                        if (typeof val !== 'object') {
+                            csvContent += `${entry.timestamp},${entry.type},${key},${val},""\n`;
+                        }
+                    });
+                });
+
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", "prtg_calc_history.csv");
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            };
+
+            const exportToExcel = () => {
+                const wb = XLSX.utils.book_new();
+                
+                // History Sheet
+                const historyData = history.map(h => ({
+                    Timestamp: h.timestamp,
+                    Type: h.type.toUpperCase(),
+                    ...Object.fromEntries(Object.entries(h.data).filter(([_, v]) => typeof v !== 'object'))
+                }));
+                const wsHistory = XLSX.utils.json_to_sheet(historyData);
+                XLSX.utils.book_append_sheet(wb, wsHistory, "History");
+
+                // Subnet Splits if available
+                if (subnetResult && subnetResult.splits) {
+                    const wsSubnet = XLSX.utils.json_to_sheet(subnetResult.splits);
+                    XLSX.utils.book_append_sheet(wb, wsSubnet, "Subnet Splits");
+                }
+
+                XLSX.writeFile(wb, "PRTG_Infrastructure_Report.xlsx");
+            };
+
+            const exportToPDF = () => {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                
+                if (logo) {
+                    try {
+                        doc.addImage(logo, 'PNG', 10, 10, 40, 15);
+                    } catch (e) { console.error("Logo error", e); }
+                }
+
+                doc.setFontSize(20);
+                doc.text("Infrastructure Capacity Report", 60, 20);
+                doc.setFontSize(10);
+                doc.text(`Generated: ${new Date().toLocaleString()}`, 60, 28);
+
+                let y = 40;
+
+                const addSection = (title, data) => {
+                    doc.setFontSize(14);
+                    doc.setTextColor(0, 160, 227);
+                    doc.text(title, 10, y);
+                    y += 10;
+                    doc.autoTable({
+                        startY: y,
+                        head: [['Metric', 'Value']],
+                        body: Object.entries(data).filter(([_, v]) => typeof v !== 'object').map(([k, v]) => [k, v]),
+                        theme: 'striped',
+                        headStyles: { fillColor: [0, 160, 227] }
+                    });
+                    y = doc.lastAutoTable.finalY + 15;
+                };
+
+                if (activeTab === 'vcpu') addSection("vCPU Analysis", vcpuResult);
+                if (activeTab === 'pcpu') addSection("pCPU Analysis", pcpuResult);
+                if (activeTab === 'subnet') addSection("Subnet Analysis", subnetResult);
+                if (activeTab === 'storage') addSection("Storage Analysis", storageResult);
+
+                doc.save("PRTG_Infrastructure_Report.pdf");
+            };
+
+            return (
+                <div className="min-h-screen flex flex-col">
+                    {/* Header */}
+                    <header className="prtg-header px-6 py-4 flex items-center justify-between sticky top-0 z-50">
+                        <div className="flex items-center gap-4">
+                            <div className="relative group cursor-pointer">
+                                {logo ? (
+                                    <img src={logo} alt="Logo" className="h-10 object-contain" />
+                                ) : (
+                                    <div className="h-10 w-32 bg-gray-100 border-2 border-dashed border-gray-300 rounded flex items-center justify-center text-xs text-gray-400">
+                                        Upload Logo
+                                    </div>
+                                )}
+                                <input 
+                                    type="file" 
+                                    accept="image/*" 
+                                    className="absolute inset-0 opacity-0 cursor-pointer" 
+                                    onChange={handleLogoUpload}
+                                />
+                            </div>
+                            <div className="h-8 w-px bg-gray-200" />
+                            <h1 className="text-xl font-bold tracking-tight">Infrastructure Calculator</h1>
+                        </div>
+
+                        <div className="flex items-center gap-4">
+                            <div className="flex items-center gap-2 prtg-card p-1 rounded-lg">
+                                {[
+                                    { id: 'light', color: 'bg-white', border: 'border-gray-200' },
+                                    { id: 'dark', color: 'bg-gray-800', border: 'border-gray-600' },
+                                    { id: 'slate', color: 'bg-slate-700', border: 'border-slate-500' },
+                                    { id: 'emerald', color: 'bg-emerald-700', border: 'border-emerald-500' },
+                                    { id: 'amber', color: 'bg-amber-700', border: 'border-amber-500' }
+                                ].map(t => (
+                                    <button
+                                        key={t.id}
+                                        onClick={() => setTheme(t.id)}
+                                        className={`w-6 h-6 rounded-full border-2 ${t.color} ${t.border} ${theme === t.id ? 'ring-2 ring-blue-400 ring-offset-1' : ''}`}
+                                        title={t.id.charAt(0).toUpperCase() + t.id.slice(1)}
+                                    />
+                                ))}
+                            </div>
+
+                            <div className="flex items-center gap-2">
+                                <button onClick={exportToCSV} className="p-2 hover:bg-gray-100 rounded-lg transition-colors" title="Export CSV">
+                                    <Icon name="FileText" size={20} />
+                                </button>
+                                <button onClick={exportToExcel} className="p-2 hover:bg-gray-100 rounded-lg transition-colors" title="Export Excel">
+                                    <Icon name="FileSpreadsheet" size={20} />
+                                </button>
+                                <button onClick={exportToPDF} className="p-2 hover:bg-gray-100 rounded-lg transition-colors" title="Export PDF">
+                                    <Icon name="Download" size={20} />
+                                </button>
+                            </div>
+                        </div>
+                    </header>
+
+                    {/* Navigation */}
+                    <nav className="bg-secondary border-b border-gray-200 px-6 flex items-center gap-8">
+                        {[
+                            { id: 'vcpu', label: 'vCPU', icon: 'Cpu' },
+                            { id: 'pcpu', label: 'pCPU', icon: 'HardDrive' },
+                            { id: 'subnet', label: 'Subnet', icon: 'Network' },
+                            { id: 'storage', label: 'Storage', icon: 'Database' }
+                        ].map(tab => (
+                            <button
+                                key={tab.id}
+                                onClick={() => setActiveTab(tab.id)}
+                                className={`py-4 px-2 flex items-center gap-2 text-sm font-bold transition-all ${
+                                    activeTab === tab.id ? 'prtg-tab-active' : 'text-secondary hover:text-primary'
+                                }`}
+                            >
+                                <Icon name={tab.icon} size={18} />
+                                {tab.label}
+                            </button>
+                        ))}
+                    </nav>
+
+                    {/* Main Content */}
+                    <main className="flex-1 p-6 overflow-auto">
+                        <AnimatePresence mode="wait">
+                            <motion.div
+                                key={activeTab}
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -10 }}
+                                className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6"
+                            >
+                                {/* Inputs Panel */}
+                                <div className="lg:col-span-1 space-y-6">
+                                    <div className="prtg-card p-6">
+                                        <h2 className="text-lg font-bold mb-6 flex items-center gap-2">
+                                            <Icon name="Settings" />
+                                            Configuration
+                                        </h2>
+                                        
+                                        {activeTab === 'vcpu' && (
+                                            <div className="space-y-4">
+                                                <div>
+                                                    <label className="block text-xs font-bold uppercase text-secondary mb-1">vCPU Count</label>
+                                                    <input 
+                                                        type="number" 
+                                                        className="w-full p-2 prtg-input rounded"
+                                                        value={vcpuInputs.vcpu}
+                                                        onChange={e => setVcpuInputs(prev => ({ ...prev, vcpu: +e.target.value }))}
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-xs font-bold uppercase text-secondary mb-1">Frequency (GHz)</label>
+                                                    <input 
+                                                        type="number" 
+                                                        step="0.1"
+                                                        className="w-full p-2 prtg-input rounded"
+                                                        value={vcpuInputs.freq}
+                                                        onChange={e => setVcpuInputs(prev => ({ ...prev, freq: +e.target.value }))}
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-xs font-bold uppercase text-secondary mb-1">Observed Load (GHz)</label>
+                                                    <input 
+                                                        type="number" 
+                                                        step="0.1"
+                                                        className="w-full p-2 prtg-input rounded"
+                                                        value={vcpuInputs.util}
+                                                        onChange={e => setVcpuInputs(prev => ({ ...prev, util: +e.target.value }))}
+                                                    />
+                                                </div>
+                                                <button 
+                                                    onClick={() => addToHistory('vcpu', vcpuResult)}
+                                                    className="w-full py-2 prtg-button rounded font-bold mt-4"
+                                                >
+                                                    Calculate & Save
+                                                </button>
+                                            </div>
+                                        )}
+
+                                        {activeTab === 'pcpu' && (
+                                            <div className="space-y-4">
+                                                <div className="grid grid-cols-2 gap-4">
+                                                    <div>
+                                                        <label className="block text-xs font-bold uppercase text-secondary mb-1">Sockets</label>
+                                                        <input type="number" className="w-full p-2 prtg-input rounded" value={pcpuInputs.sockets} onChange={e => setPcpuInputs(p => ({ ...p, sockets: +e.target.value }))} />
+                                                    </div>
+                                                    <div>
+                                                        <label className="block text-xs font-bold uppercase text-secondary mb-1">Cores/Socket</label>
+                                                        <input type="number" className="w-full p-2 prtg-input rounded" value={pcpuInputs.cores} onChange={e => setPcpuInputs(p => ({ ...p, cores: +e.target.value }))} />
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <label className="block text-xs font-bold uppercase text-secondary mb-1">Threads/Core</label>
+                                                    <input type="number" className="w-full p-2 prtg-input rounded" value={pcpuInputs.threads} onChange={e => setPcpuInputs(p => ({ ...p, threads: +e.target.value }))} />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-xs font-bold uppercase text-secondary mb-1">Frequency (GHz)</label>
+                                                    <input type="number" step="0.1" className="w-full p-2 prtg-input rounded" value={pcpuInputs.freq} onChange={e => setPcpuInputs(p => ({ ...p, freq: +e.target.value }))} />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-xs font-bold uppercase text-secondary mb-1">Utilization (%)</label>
+                                                    <input type="range" min="0" max="150" className="w-full" value={pcpuInputs.utilPct} onChange={e => setPcpuInputs(p => ({ ...p, utilPct: +e.target.value }))} />
+                                                    <div className="text-right text-xs font-bold">{pcpuInputs.utilPct}%</div>
+                                                </div>
+                                                <button onClick={() => addToHistory('pcpu', pcpuResult)} className="w-full py-2 prtg-button rounded font-bold mt-4">Calculate & Save</button>
+                                            </div>
+                                        )}
+
+                                        {activeTab === 'subnet' && (
+                                            <div className="space-y-4">
+                                                <div>
+                                                    <label className="block text-xs font-bold uppercase text-secondary mb-1">Base IP Address</label>
+                                                    <input type="text" className="w-full p-2 prtg-input rounded" value={subnetInputs.ip} onChange={e => setSubnetInputs(p => ({ ...p, ip: e.target.value }))} />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-xs font-bold uppercase text-secondary mb-1">Mask (CIDR or Dec)</label>
+                                                    <input type="text" className="w-full p-2 prtg-input rounded" value={subnetInputs.mask} onChange={e => setSubnetInputs(p => ({ ...p, mask: e.target.value }))} />
+                                                </div>
+                                                <button onClick={() => addToHistory('subnet', subnetResult)} className="w-full py-2 prtg-button rounded font-bold mt-4">Calculate & Save</button>
+                                            </div>
+                                        )}
+
+                                        {activeTab === 'storage' && (
+                                            <div className="space-y-4">
+                                                <div className="grid grid-cols-2 gap-4">
+                                                    <div>
+                                                        <label className="block text-xs font-bold uppercase text-secondary mb-1">Drive Count</label>
+                                                        <input type="number" className="w-full p-2 prtg-input rounded" value={storageInputs.drives} onChange={e => setStorageInputs(p => ({ ...p, drives: +e.target.value }))} />
+                                                    </div>
+                                                    <div>
+                                                        <label className="block text-xs font-bold uppercase text-secondary mb-1">Capacity</label>
+                                                        <input type="number" step="0.1" className="w-full p-2 prtg-input rounded" value={storageInputs.cap} onChange={e => setStorageInputs(p => ({ ...p, cap: +e.target.value }))} />
+                                                    </div>
+                                                </div>
+                                                <div className="grid grid-cols-2 gap-4">
+                                                    <div>
+                                                        <label className="block text-xs font-bold uppercase text-secondary mb-1">Unit</label>
+                                                        <select className="w-full p-2 prtg-input rounded" value={storageInputs.unit} onChange={e => setStorageInputs(p => ({ ...p, unit: e.target.value }))}>
+                                                            <option value="GB">GB</option>
+                                                            <option value="TB">TB</option>
+                                                        </select>
+                                                    </div>
+                                                    <div>
+                                                        <label className="block text-xs font-bold uppercase text-secondary mb-1">RAID Level</label>
+                                                        <select className="w-full p-2 prtg-input rounded" value={storageInputs.raid} onChange={e => setStorageInputs(p => ({ ...p, raid: e.target.value }))}>
+                                                            <option value="none">None</option>
+                                                            <option value="0">RAID 0</option>
+                                                            <option value="1">RAID 1</option>
+                                                            <option value="5">RAID 5</option>
+                                                            <option value="6">RAID 6</option>
+                                                            <option value="10">RAID 10</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <label className="block text-xs font-bold uppercase text-secondary mb-1">Used Space ({storageInputs.unit})</label>
+                                                    <input type="number" step="0.1" className="w-full p-2 prtg-input rounded" value={storageInputs.used} onChange={e => setStorageInputs(p => ({ ...p, used: +e.target.value }))} />
+                                                </div>
+                                                <button onClick={() => addToHistory('storage', storageResult)} className="w-full py-2 prtg-button rounded font-bold mt-4">Calculate & Save</button>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Quick Stats */}
+                                    <div className="prtg-card p-6">
+                                        <h3 className="text-sm font-bold uppercase text-secondary mb-4">Quick Status</h3>
+                                        {activeTab === 'vcpu' && <StatusBadge status={vcpuResult.status} />}
+                                        {activeTab === 'pcpu' && <StatusBadge status={pcpuResult.status} />}
+                                        {activeTab === 'storage' && <StatusBadge status={storageResult.status} />}
+                                        {activeTab === 'subnet' && <div className="text-sm font-bold text-accent">{subnetResult?.ipType} {subnetResult?.ipClass}</div>}
+                                        
+                                        <p className="mt-4 text-sm text-secondary leading-relaxed">
+                                            {activeTab === 'vcpu' && vcpuResult.status.msg}
+                                            {activeTab === 'pcpu' && pcpuResult.status.msg}
+                                            {activeTab === 'storage' && storageResult.status.msg}
+                                            {activeTab === 'subnet' && `Network: ${subnetResult?.network} | Hosts: ${subnetResult?.hosts.toLocaleString()}`}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {/* Results Panel */}
+                                <div className="lg:col-span-2 space-y-6">
+                                    {/* Metric Grid */}
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                        {activeTab === 'vcpu' && (
+                                            <>
+                                                <MetricCard label="Total Capacity" value={vcpuResult.capacity.toFixed(1)} unit="GHz" icon="Zap" />
+                                                <MetricCard label="Observed Load" value={vcpuResult.observed.toFixed(1)} unit="GHz" icon="Activity" />
+                                                <MetricCard label="Headroom" value={vcpuResult.headroom.toFixed(1)} unit="GHz" icon="ArrowUpRight" />
+                                            </>
+                                        )}
+                                        {activeTab === 'pcpu' && (
+                                            <>
+                                                <MetricCard label="Logical Procs" value={pcpuResult.totalLogical} unit="Threads" icon="Cpu" />
+                                                <MetricCard label="Peak Power" value={pcpuResult.estPower?.toFixed(0) || 'N/A'} unit="Watts" icon="Zap" />
+                                                <MetricCard label="Used Capacity" value={pcpuResult.usedGhz.toFixed(1)} unit="GHz" icon="Activity" />
+                                            </>
+                                        )}
+                                        {activeTab === 'subnet' && (
+                                            <>
+                                                <MetricCard label="Usable Hosts" value={subnetResult?.hosts.toLocaleString() || '0'} unit="IPs" icon="Users" />
+                                                <MetricCard label="Network ID" value={subnetResult?.network || ''} unit="" icon="Globe" />
+                                                <MetricCard label="Mask" value={subnetResult?.mask || ''} unit="" icon="Shield" />
+                                            </>
+                                        )}
+                                        {activeTab === 'storage' && (
+                                            <>
+                                                <MetricCard label="Usable Cap" value={storageResult.usable.toFixed(2)} unit={storageInputs.unit} icon="Database" />
+                                                <MetricCard label="Free Space" value={storageResult.free.toFixed(2)} unit={storageInputs.unit} icon="ArrowDownRight" />
+                                                <MetricCard label="Net Available" value={storageResult.netAvail.toFixed(2)} unit={storageInputs.unit} icon="CheckCircle" />
+                                            </>
+                                        )}
+                                    </div>
+
+                                    {/* Visualizations */}
+                                    <div className="prtg-card p-6">
+                                        <h3 className="text-lg font-bold mb-6">Utilization Analysis</h3>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                            <div className="space-y-6">
+                                                {activeTab === 'vcpu' && <ProgressBar value={vcpuResult.utilization} label="vCPU Utilization" statusCls={vcpuResult.status.cls} />}
+                                                {activeTab === 'pcpu' && <ProgressBar value={pcpuResult.utilization} label="pCPU Utilization" statusCls={pcpuResult.status.cls} />}
+                                                {activeTab === 'storage' && <ProgressBar value={storageResult.utilization} label="Storage Utilization" statusCls={storageResult.status.cls} />}
+                                                
+                                                <div className="pt-4 border-t border-gray-100">
+                                                    <h4 className="text-xs font-bold uppercase text-secondary mb-3">Resource Breakdown</h4>
+                                                    <div className="space-y-2">
+                                                        {activeTab === 'vcpu' && (
+                                                            <div className="flex justify-between text-sm">
+                                                                <span className="text-secondary">Available Headroom</span>
+                                                                <span className="font-bold text-green-500">{vcpuResult.headroom.toFixed(1)} GHz</span>
+                                                            </div>
+                                                        )}
+                                                        {activeTab === 'subnet' && (
+                                                            <>
+                                                                <div className="flex justify-between text-sm">
+                                                                    <span className="text-secondary">Range</span>
+                                                                    <span className="font-bold">{subnetResult?.range}</span>
+                                                                </div>
+                                                                <div className="flex justify-between text-sm">
+                                                                    <span className="text-secondary">Broadcast</span>
+                                                                    <span className="font-bold">{subnetResult?.broadcast}</span>
+                                                                </div>
+                                                            </>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div className="h-48">
+                                                <ResponsiveContainer width="100%" height="100%">
+                                                    <PieChart>
+                                                        <Pie
+                                                            data={
+                                                                activeTab === 'vcpu' ? [
+                                                                    { name: 'Used', value: vcpuResult.observed },
+                                                                    { name: 'Free', value: vcpuResult.headroom }
+                                                                ] : activeTab === 'pcpu' ? [
+                                                                    { name: 'Used', value: pcpuResult.usedGhz },
+                                                                    { name: 'Free', value: pcpuResult.peakGhz - pcpuResult.usedGhz }
+                                                                ] : activeTab === 'storage' ? [
+                                                                    { name: 'Used', value: storageResult.used },
+                                                                    { name: 'Free', value: storageResult.free }
+                                                                ] : [
+                                                                    { name: 'Network', value: 1 },
+                                                                    { name: 'Hosts', value: subnetResult?.hosts || 0 },
+                                                                    { name: 'Broadcast', value: 1 }
+                                                                ]
+                                                            }
+                                                            cx="50%" cy="50%" innerRadius={40} outerRadius={60} paddingAngle={5} dataKey="value"
+                                                        >
+                                                            <Cell fill="var(--accent-color)" />
+                                                            <Cell fill="var(--border-color)" />
+                                                            {activeTab === 'subnet' && <Cell fill="var(--status-hi)" />}
+                                                        </Pie>
+                                                        <Tooltip />
+                                                    </PieChart>
+                                                </ResponsiveContainer>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* History Table */}
+                                    <div className="prtg-card overflow-hidden">
+                                        <div className="p-4 border-b border-gray-200 flex items-center justify-between">
+                                            <h3 className="text-sm font-bold uppercase">Recent Calculations</h3>
+                                            <button onClick={() => setHistory([])} className="text-xs font-bold text-red-500 hover:underline">Clear History</button>
+                                        </div>
+                                        <div className="overflow-x-auto">
+                                            <table className="w-full text-left text-sm">
+                                                <thead className="bg-gray-50 text-secondary text-xs uppercase">
+                                                    <tr>
+                                                        <th className="px-4 py-2">Time</th>
+                                                        <th className="px-4 py-2">Type</th>
+                                                        <th className="px-4 py-2">Main Metric</th>
+                                                        <th className="px-4 py-2">Status</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody className="divide-y divide-gray-100">
+                                                    {history.filter(h => h.type === activeTab).map(h => (
+                                                        <tr key={h.id} className="hover:bg-gray-50 transition-colors">
+                                                            <td className="px-4 py-3 text-secondary">{h.timestamp}</td>
+                                                            <td className="px-4 py-3 font-bold uppercase">{h.type}</td>
+                                                            <td className="px-4 py-3">
+                                                                {h.type === 'vcpu' && `${h.data.utilization.toFixed(1)}% Util`}
+                                                                {h.type === 'pcpu' && `${h.data.utilization.toFixed(1)}% Util`}
+                                                                {h.type === 'subnet' && `${h.data.hosts.toLocaleString()} Hosts`}
+                                                                {h.type === 'storage' && `${h.data.utilization.toFixed(1)}% Util`}
+                                                            </td>
+                                                            <td className="px-4 py-3">
+                                                                {h.data.status ? (
+                                                                    <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
+                                                                        h.data.status.cls === 'ok' ? 'bg-green-100 text-green-700' :
+                                                                        h.data.status.cls === 'hi' ? 'bg-amber-100 text-amber-700' :
+                                                                        'bg-red-100 text-red-700'
+                                                                    }`}>
+                                                                        {h.data.status.label}
+                                                                    </span>
+                                                                ) : '-'}
+                                                            </td>
+                                                        </tr>
+                                                    ))}
+                                                    {history.filter(h => h.type === activeTab).length === 0 && (
+                                                        <tr>
+                                                            <td colSpan="4" className="px-4 py-8 text-center text-secondary italic">No history for this tab yet.</td>
+                                                        </tr>
+                                                    )}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        </AnimatePresence>
+                    </main>
+
+                    {/* Footer */}
+                    <footer className="bg-secondary border-t border-gray-200 px-6 py-4 flex items-center justify-between text-xs text-secondary">
+                        <div className="flex items-center gap-4">
+                            <span>&copy; 2024 Infrastructure Calculator</span>
+                            <div className="w-1 h-1 bg-gray-300 rounded-full" />
+                            <span>v2.1.0 Standalone</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <div className="w-2 h-2 rounded-full bg-green-500" />
+                            <span>All Systems Operational</span>
+                        </div>
+                    </footer>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
