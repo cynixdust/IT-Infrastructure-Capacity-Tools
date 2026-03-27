@@ -13,15 +13,15 @@
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
-    <script src="https://unpkg.com/lucide-react@latest/dist/umd/lucide-react.min.js"></script>
+    <script src="https://unpkg.com/lucide@0.344.0/dist/umd/lucide.min.js"></script>
+    <script src="https://unpkg.com/lucide-react@0.344.0/dist/umd/lucide-react.min.js"></script>
     <!-- Recharts -->
-    <script src="https://unpkg.com/recharts/umd/Recharts.js"></script>
+    <script src="https://unpkg.com/recharts@2.12.2/umd/Recharts.js"></script>
     <!-- jsPDF and SheetJS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <!-- Framer Motion (Motion) -->
+    <!-- Framer Motion -->
     <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
 
     <style>
@@ -180,6 +180,9 @@
     </div>
 
     <script type="text/babel">
+        // --- Shims ---
+        window.process = { env: { NODE_ENV: 'production' } };
+
         // --- Global Error Handling ---
         window.onerror = function(message, source, lineno, colno, error) {
             console.error("Global error:", message, "at", source, ":", lineno);
@@ -205,10 +208,14 @@
                 if (typeof React === 'undefined') throw new Error("React library failed to load.");
                 if (typeof ReactDOM === 'undefined') throw new Error("ReactDOM library failed to load.");
                 
+                window.React = React;
+                window.ReactDOM = ReactDOM;
+                
                 const { useState, useEffect, useMemo, useRef } = React;
                 
                 // Recharts
                 const RechartsObj = window.Recharts || {};
+                console.log("Recharts status:", !!window.Recharts);
                 const { 
                     LineChart = () => null, 
                     Line = () => null, 
@@ -216,7 +223,7 @@
                     YAxis = () => null, 
                     CartesianGrid = () => null, 
                     Tooltip = () => null, 
-                    ResponsiveContainer = ({children}) => <div>{children}</div>, 
+                    ResponsiveContainer = ({children}) => <div style={{width:'100%',height:'100%',display:'flex',alignItems:'center',justifyContent:'center',background:'#f8f9fa'}}>{children}</div>, 
                     AreaChart = () => null, 
                     Area = () => null,
                     BarChart = () => null, 
@@ -227,12 +234,21 @@
                 } = RechartsObj;
                 
                 // Framer Motion
-                const Motion = window.Motion || window.framerMotion || {};
-                const motion = Motion.motion || { div: 'div', section: 'section', header: 'header', main: 'main', footer: 'footer', h1: 'h1', h2: 'h2', h3: 'h3', h4: 'h4', p: 'p', span: 'span', button: 'button', input: 'input' };
-                const AnimatePresence = Motion.AnimatePresence || (({children}) => children);
+                const Motion = window.Motion || window.framerMotion || window.FramerMotion || {};
+                console.log("Motion status:", !!(window.Motion || window.framerMotion || window.FramerMotion));
+                const motion = Motion.motion || { 
+                    div: 'div', section: 'section', header: 'header', main: 'main', footer: 'footer', 
+                    h1: 'h1', h2: 'h2', h3: 'h3', h4: 'h4', p: 'p', span: 'span', 
+                    button: 'button', input: 'input', nav: 'nav', img: 'img'
+                };
+                const AnimatePresence = Motion.AnimatePresence || (({children}) => <React.Fragment>{children}</React.Fragment>);
 
                 // Lucide React
-                const LucideIcons = window.LucideReact || {};
+                const LucideIcons = window.LucideReact || window.lucide || window.Lucide || {};
+                console.log("Lucide status:", !!(window.LucideReact || window.lucide || window.Lucide));
+                if (Object.keys(LucideIcons).length === 0) {
+                    console.warn("LucideIcons not found in global scope, icons may not display.");
+                }
 
                 // --- Utility Functions ---
         function ipToNum(ip) {
@@ -412,8 +428,8 @@
         // --- Components ---
 
         const Icon = ({ name, size = 20, className = "" }) => {
-            const LucideIcon = LucideIcons[name];
-            if (!LucideIcon) return null;
+            const LucideIcon = LucideIcons[name] || (LucideIcons.icons && LucideIcons.icons[name]);
+            if (!LucideIcon) return <span className="text-[8px] font-bold opacity-50">{name}</span>;
             return <LucideIcon size={size} className={className} />;
         };
 
@@ -460,12 +476,13 @@
                     <motion.div 
                         initial={{ width: 0 }}
                         animate={{ width: `${Math.min(value, 100)}%` }}
-                        className={`h-full transition-colors duration-500 ${
+                        className={`h-full transition-all duration-500 ${
                             statusCls === 'ok' ? 'bg-status-ok' :
                             statusCls === 'hi' ? 'bg-status-hi' :
                             'bg-status-ov'
                         }`}
                         style={{
+                            width: Motion.motion ? undefined : `${Math.min(value, 100)}%`,
                             backgroundImage: 'linear-gradient(to bottom, rgba(255,255,255,0.3), transparent)'
                         }}
                     />
