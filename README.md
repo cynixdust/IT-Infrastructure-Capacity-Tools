@@ -41,6 +41,43 @@ A comprehensive React-based application for infrastructure planning and capacity
 
 ---
 
+## XAMPP Deployment Guide (Step-by-Step)
+
+To host this application on a local development environment using XAMPP (Apache), follow these steps.
+
+### 1. Prerequisites
+- **XAMPP** installed (usually in `C:\xampp`).
+- **Node.js**: Installed on your build machine.
+
+### 2. Build the Application
+On your development machine, run the build command:
+```bash
+npm run build
+```
+This will create a `dist` folder in your project root.
+
+### 3. Prepare the XAMPP Folder
+1. Open your XAMPP installation directory (default: `C:\xampp\htdocs`).
+2. Create a new folder named `infra-tools`.
+3. Copy the entire contents of the `dist` folder to `C:\xampp\htdocs\infra-tools`.
+4. Ensure the `.htaccess` file is present in the root of this folder (it is automatically included if you copied from `dist`).
+
+### 4. Start Apache
+1. Open the **XAMPP Control Panel**.
+2. Click **Start** next to the **Apache** module.
+
+### 5. Access the Application
+Open your browser and navigate to:
+`http://localhost/infra-tools`
+
+### 6. Using the Standalone Version
+If you don't want to deal with build processes or Node.js on the server:
+1. Copy the `standalone.html` file from the project root to `C:\xampp\htdocs\infra-tools`.
+2. Rename it to `index.html`.
+3. Access it via `http://localhost/infra-tools`.
+
+---
+
 ## IIS Deployment Guide (Step-by-Step)
 
 To host this application on a Windows Server using Internet Information Services (IIS), follow these detailed steps.
