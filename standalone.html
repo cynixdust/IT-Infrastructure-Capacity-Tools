@@ -180,22 +180,61 @@
     </div>
 
     <script type="text/babel">
-        const { useState, useEffect, useMemo, useRef } = React;
-        
-        // Fix global names for UMD builds
-        const { 
-            LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area,
-            BarChart, Bar, Cell, PieChart, Pie
-        } = window.Recharts || {};
-        
-        // Framer Motion global is usually 'Motion' or 'framerMotion'
-        const Motion = window.Motion || window.framerMotion || {};
-        const { motion, AnimatePresence } = Motion;
+        // --- Global Error Handling ---
+        window.onerror = function(message, source, lineno, colno, error) {
+            console.error("Global error:", message, "at", source, ":", lineno);
+            const loadingEl = document.getElementById('loading');
+            if (loadingEl) {
+                loadingEl.innerHTML = `
+                    <div class="text-red-500 p-4 text-center">
+                        <p class="font-bold">JavaScript Error</p>
+                        <p class="text-xs mt-2">${message}</p>
+                        <p class="text-[10px] opacity-50 mt-1">Line: ${lineno}</p>
+                    </div>
+                `;
+            }
+            return false;
+        };
 
-        // Lucide React global
-        const LucideIcons = window.LucideReact || {};
+        // --- Initialization ---
+        const init = () => {
+            try {
+                console.log("Initializing SABA IT Infrastructure Calculator...");
+                
+                // Check core dependencies
+                if (typeof React === 'undefined') throw new Error("React library failed to load.");
+                if (typeof ReactDOM === 'undefined') throw new Error("ReactDOM library failed to load.");
+                
+                const { useState, useEffect, useMemo, useRef } = React;
+                
+                // Recharts
+                const RechartsObj = window.Recharts || {};
+                const { 
+                    LineChart = () => null, 
+                    Line = () => null, 
+                    XAxis = () => null, 
+                    YAxis = () => null, 
+                    CartesianGrid = () => null, 
+                    Tooltip = () => null, 
+                    ResponsiveContainer = ({children}) => <div>{children}</div>, 
+                    AreaChart = () => null, 
+                    Area = () => null,
+                    BarChart = () => null, 
+                    Bar = () => null, 
+                    Cell = () => null, 
+                    PieChart = () => null, 
+                    Pie = () => null
+                } = RechartsObj;
+                
+                // Framer Motion
+                const Motion = window.Motion || window.framerMotion || {};
+                const motion = Motion.motion || { div: 'div', section: 'section', header: 'header', main: 'main', footer: 'footer', h1: 'h1', h2: 'h2', h3: 'h3', h4: 'h4', p: 'p', span: 'span', button: 'button', input: 'input' };
+                const AnimatePresence = Motion.AnimatePresence || (({children}) => children);
 
-        // --- Utility Functions ---
+                // Lucide React
+                const LucideIcons = window.LucideReact || {};
+
+                // --- Utility Functions ---
         function ipToNum(ip) {
             return ip.split('.').reduce((a, o) => (a << 8) | +o, 0) >>> 0;
         }
@@ -979,8 +1018,29 @@
             );
         };
 
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
+                const root = ReactDOM.createRoot(document.getElementById('root'));
+                root.render(<App />);
+            } catch (err) {
+                console.error("Initialization error:", err);
+                throw err;
+            }
+        };
+
+        try {
+            init();
+        } catch (e) {
+            console.error("Critical initialization error:", e);
+            document.getElementById('root').innerHTML = `
+                <div class="flex items-center justify-center min-h-screen font-sans text-red-500 p-8">
+                    <div class="max-w-md text-center">
+                        <h1 class="text-2xl font-bold mb-4">Initialization Failed</h1>
+                        <p class="mb-4">The application failed to start. This is usually due to a script loading error or a browser compatibility issue.</p>
+                        <pre class="bg-gray-100 p-4 rounded text-left text-xs overflow-auto max-h-40">${e.message}</pre>
+                        <button onclick="window.location.reload()" class="mt-6 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Retry</button>
+                    </div>
+                </div>
+            `;
+        }
     </script>
 </body>
 </html>
