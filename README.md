@@ -50,10 +50,15 @@ To host this application on a local development environment using XAMPP (Apache)
 - **Node.js**: Installed on your build machine.
 
 ### 2. Build the Application
-On your development machine, run the build command:
-```bash
-npm run build
-```
+On your development machine, run these commands in order:
+1. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+2. **Build the project:**
+   ```bash
+   npm run build
+   ```
 This will create a `dist` folder in your project root.
 
 ### 3. Prepare the XAMPP Folder

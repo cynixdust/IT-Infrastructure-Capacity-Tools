@@ -4,295 +4,248 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SABA IT Infrastructure Capacity Tools</title>
-    <!-- Tailwind CSS Play CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <!-- React, ReactDOM, Babel -->
+    
+    <!-- Core Libraries (CDNs) -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@0.344.0/dist/umd/lucide.min.js"></script>
-    <script src="https://unpkg.com/lucide-react@0.344.0/dist/umd/lucide-react.min.js"></script>
-    <!-- Recharts -->
-    <script src="https://unpkg.com/recharts@2.12.2/umd/Recharts.js"></script>
-    <!-- jsPDF and SheetJS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <!-- Framer Motion -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Icons & Charts -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/recharts/umd/Recharts.js"></script>
+    
+    <!-- Animations -->
     <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
-
-    <script>
-        // Check if Babel loaded
-        window.addEventListener('load', () => {
-            if (typeof Babel === 'undefined') {
-                const root = document.getElementById('root');
-                if (root) {
-                    root.innerHTML = `
-                        <div style="font-family: sans-serif; padding: 2rem; text-align: center; color: #d9534f;">
-                            <h1 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 1rem;">Babel Standalone Failed to Load</h1>
-                            <p>The application requires Babel to run in standalone mode. This is usually caused by a firewall or proxy blocking <code>unpkg.com</code>.</p>
-                            <p style="margin-top: 1rem; font-size: 0.875rem; color: #666;">Try checking your internet connection or using the built <code>dist</code> version instead.</p>
-                        </div>
-                    `;
-                }
-            }
-        });
-    </script>
+    
+    <!-- Export Libraries -->
+    <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+    <script src="https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js"></script>
+    <script src="https://unpkg.com/jspdf-autotable@latest/dist/jspdf.plugin.autotable.min.js"></script>
 
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
         :root {
-            --bg-primary: #f5f5f5;
-            --bg-secondary: #ffffff;
-            --text-primary: #1a1a1a;
-            --text-secondary: #666666;
-            --border-color: #e5e5e5;
-            --accent-color: #00a0e3;
-            --accent-hover: #008cc7;
-            --status-ok: #5cb85c;
-            --status-hi: #f0ad4e;
-            --status-ov: #d9534f;
-            --card-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            --bg: #f8f6f2;
+            --bg-card: #ffffff;
+            --bg-input: #ffffff;
+            --border: #e2e0db;
+            --text-primary: #2d2d2d;
+            --text-sec: #6b6b6b;
+            --text-mono: #1a1a1a;
+            --accent: #1b5e20;
+            --accent-dim: rgba(27, 94, 32, 0.08);
+            --ok: #1b5e20;
+            --ok-bg: #e8f5e9;
+            --hi: #f57f17;
+            --hi-bg: #fff9c4;
+            --ov: #b71c1c;
+            --ov-bg: #ffebee;
+            --gauge: #e0e0e0;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            
+            /* PRTG Specific Colors */
+            --prtg-green: #00b050;
+            --prtg-yellow: #ffc000;
+            --prtg-red: #ff0000;
+            --prtg-blue: #00b0f0;
+            --prtg-gray: #a6a6a6;
+            --prtg-bg: #f3f3f3;
+            
+            --r: 8px;
         }
 
         .theme-dark {
-            --bg-primary: #1a1a1a;
-            --bg-secondary: #2d2d2d;
-            --text-primary: #f5f5f5;
-            --text-secondary: #a0a0a0;
-            --border-color: #404040;
-            --accent-color: #00a0e3;
-            --accent-hover: #008cc7;
-            --status-ok: #5cb85c;
-            --status-hi: #f0ad4e;
-            --status-ov: #d9534f;
-            --card-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            --bg: #111210;
+            --bg-card: #1c1c1a;
+            --bg-input: #252521;
+            --border: #333330;
+            --text-primary: #f0ede8;
+            --text-sec: #9a9690;
+            --text-mono: #d0cdc8;
+            --accent: #e8722a;
+            --accent-dim: rgba(232, 114, 42, 0.14);
+            --ok: #2ecc71;
+            --ok-bg: rgba(46, 204, 113, 0.12);
+            --hi: #f0a500;
+            --hi-bg: rgba(240, 165, 0, 0.12);
+            --ov: #e74c3c;
+            --ov-bg: rgba(231, 76, 60, 0.12);
+            --gauge: #2c2c2a;
+            --shadow: 0 2px 24px rgba(0, 0, 0, 0.35);
         }
 
         .theme-slate {
-            --bg-primary: #0f172a;
-            --bg-secondary: #1e293b;
+            --bg: #0f172a;
+            --bg-card: #1e293b;
+            --bg-input: #334155;
+            --border: #475569;
             --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
-            --border-color: #334155;
-            --accent-color: #38bdf8;
-            --accent-hover: #0ea5e9;
-            --status-ok: #22c55e;
-            --status-hi: #f59e0b;
-            --status-ov: #ef4444;
-            --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --text-sec: #94a3b8;
+            --text-mono: #cbd5e1;
+            --accent: #38bdf8;
+            --accent-dim: rgba(56, 189, 248, 0.15);
+            --ok: #10b981;
+            --ok-bg: rgba(16, 185, 129, 0.12);
+            --hi: #f59e0b;
+            --hi-bg: rgba(245, 158, 11, 0.12);
+            --ov: #ef4444;
+            --ov-bg: rgba(239, 68, 68, 0.12);
+            --gauge: #334155;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
         }
 
         .theme-emerald {
-            --bg-primary: #064e3b;
-            --bg-secondary: #065f46;
+            --bg: #064e3b;
+            --bg-card: #065f46;
+            --bg-input: #047857;
+            --border: #059669;
             --text-primary: #ecfdf5;
-            --text-secondary: #a7f3d0;
-            --border-color: #047857;
-            --accent-color: #10b981;
-            --accent-hover: #059669;
-            --status-ok: #34d399;
-            --status-hi: #fbbf24;
-            --status-ov: #f87171;
-            --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+            --text-sec: #a7f3d0;
+            --text-mono: #d1fae5;
+            --accent: #34d399;
+            --accent-dim: rgba(52, 211, 153, 0.2);
+            --ok: #10b981;
+            --ok-bg: rgba(16, 185, 129, 0.15);
+            --hi: #fbbf24;
+            --hi-bg: rgba(251, 191, 36, 0.15);
+            --ov: #f87171;
+            --ov-bg: rgba(248, 113, 113, 0.15);
+            --gauge: #065f46;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
 
         .theme-amber {
-            --bg-primary: #451a03;
-            --bg-secondary: #78350f;
+            --bg: #451a03;
+            --bg-card: #78350f;
+            --bg-input: #92400e;
+            --border: #b45309;
             --text-primary: #fffbeb;
-            --text-secondary: #fde68a;
-            --border-color: #92400e;
-            --accent-color: #f59e0b;
-            --accent-hover: #d97706;
-            --status-ok: #10b981;
-            --status-hi: #fbbf24;
-            --status-ov: #ef4444;
-            --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+            --text-sec: #fde68a;
+            --text-mono: #fef3c7;
+            --accent: #fbbf24;
+            --accent-dim: rgba(251, 191, 36, 0.2);
+            --ok: #10b981;
+            --ok-bg: rgba(16, 185, 129, 0.15);
+            --hi: #f59e0b;
+            --hi-bg: rgba(245, 158, 11, 0.15);
+            --ov: #ef4444;
+            --ov-bg: rgba(239, 68, 68, 0.15);
+            --gauge: #78350f;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
         }
 
         body {
+            background-color: var(--bg);
+            color: var(--text-primary);
             font-family: 'Inter', sans-serif;
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            transition: background-color 0.3s, color 0.3s;
+            transition: background-color 0.25s ease, color 0.25s ease;
+            margin: 0;
+            padding: 0;
         }
 
-        .prtg-card {
-            background-color: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            box-shadow: var(--card-shadow);
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-sec); }
+
+        /* PRTG Glossy Effect */
+        .prtg-gloss {
+            position: relative;
+            overflow: hidden;
+        }
+        .prtg-gloss::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.3), rgba(255,255,255,0.05));
+            pointer-events: none;
         }
 
-        .prtg-header {
-            background-color: var(--bg-secondary);
-            border-bottom: 2px solid var(--accent-color);
-        }
-
-        .prtg-tab-active {
-            border-bottom: 3px solid var(--accent-color);
-            color: var(--accent-color);
-        }
-
-        .prtg-input {
-            background-color: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-        }
-
-        .prtg-button {
-            background-color: var(--accent-color);
-            color: white;
-            transition: background-color 0.2s;
-        }
-
-        .prtg-button:hover {
-            background-color: var(--accent-hover);
-        }
-
-        .status-ok { color: var(--status-ok); }
-        .status-hi { color: var(--status-hi); }
-        .status-ov { color: var(--status-ov); }
-
-        .bg-status-ok { background-color: var(--status-ok); }
-        .bg-status-hi { background-color: var(--status-hi); }
-        .bg-status-ov { background-color: var(--status-ov); }
-
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: var(--bg-primary);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--border-color);
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--text-secondary);
-        }
-
-        .recharts-cartesian-grid-horizontal line,
-        .recharts-cartesian-grid-vertical line {
-            stroke: var(--border-color);
-        }
-
-        .recharts-text {
-            fill: var(--text-secondary);
-        }
+        /* Animations */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-in { animation: fadeIn 0.4s ease-out forwards; }
     </style>
 </head>
 <body>
-    <div id="root">
-        <div id="loading" class="flex items-center justify-center min-h-screen font-sans text-gray-500">
-            <div class="flex flex-col items-center gap-4">
-                <div class="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                <p>Initializing SABA IT Infrastructure Calculator...</p>
-            </div>
-        </div>
-    </div>
+    <div id="root"></div>
+
+    <!-- Global SVG Definitions for PRTG-style 3D Effects -->
+    <svg width="0" height="0" style="position: absolute;">
+      <defs>
+        <linearGradient id="prtgGreen" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#26e686" />
+          <stop offset="48%" stop-color="#00b050" />
+          <stop offset="50%" stop-color="#009a46" />
+          <stop offset="100%" stop-color="#00803a" />
+        </linearGradient>
+        <linearGradient id="prtgOrange" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#ffdb4d" />
+          <stop offset="48%" stop-color="#ffc000" />
+          <stop offset="50%" stop-color="#e6ac00" />
+          <stop offset="100%" stop-color="#cc9900" />
+        </linearGradient>
+        <linearGradient id="prtgRed" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#ff4d4d" />
+          <stop offset="48%" stop-color="#ff0000" />
+          <stop offset="50%" stop-color="#e60000" />
+          <stop offset="100%" stop-color="#cc0000" />
+        </linearGradient>
+        <linearGradient id="prtgBlue" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#4dd2ff" />
+          <stop offset="48%" stop-color="#00b0f0" />
+          <stop offset="50%" stop-color="#009ed8" />
+          <stop offset="100%" stop-color="#008bc0" />
+        </linearGradient>
+        <linearGradient id="prtgGray" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#f0f0f0" />
+          <stop offset="48%" stop-color="#d0d0d0" />
+          <stop offset="50%" stop-color="#b0b0b0" />
+          <stop offset="100%" stop-color="#909090" />
+        </linearGradient>
+        
+        <filter id="prtgShadow" x="-10%" y="-10%" width="120%" height="120%">
+          <feDropShadow dx="0" dy="1" stdDeviation="1" flood-opacity="0.3" />
+        </filter>
+        
+        <filter id="prtgBevel">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="0.5" result="blur" />
+          <feSpecularLighting in="blur" surfaceScale="2" specularConstant="1" specularExponent="20" lighting-color="#ffffff" result="specOut">
+            <fePointLight x="-5000" y="-10000" z="20000" />
+          </feSpecularLighting>
+          <feComposite in="specOut" in2="SourceAlpha" operator="in" result="specOut" />
+          <feComposite in="SourceGraphic" in2="specOut" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" result="litGraphic" />
+        </filter>
+      </defs>
+    </svg>
 
     <script type="text/babel">
-        // --- Shims ---
-        window.process = { env: { NODE_ENV: 'production' } };
+        const { useState, useEffect, useMemo } = React;
+        const { 
+            BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, 
+            ResponsiveContainer, PieChart, Pie, Cell, AreaChart, Area 
+        } = Recharts;
+        const { motion, AnimatePresence } = window.Motion || { motion: (props) => <div {...props} />, AnimatePresence: (props) => props.children };
 
-        // --- Global Error Handling ---
-        window.onerror = function(message, source, lineno, colno, error) {
-            console.error("Global error:", message, "at", source, ":", lineno);
-            const loadingEl = document.getElementById('loading');
-            if (loadingEl) {
-                loadingEl.innerHTML = `
-                    <div class="text-red-500 p-4 text-center">
-                        <p class="font-bold">JavaScript Error</p>
-                        <p class="text-xs mt-2">${message}</p>
-                        <p class="text-[10px] opacity-50 mt-1">Line: ${lineno}</p>
-                    </div>
-                `;
-            }
-            return false;
-        };
+        // --- Utility Functions ---
 
-        // --- Initialization ---
-        const init = () => {
-            try {
-                console.log("Initializing SABA IT Infrastructure Calculator...");
-                
-                // Check core dependencies
-                if (typeof React === 'undefined') throw new Error("React library failed to load.");
-                if (typeof ReactDOM === 'undefined') throw new Error("ReactDOM library failed to load.");
-                
-                window.React = React;
-                window.ReactDOM = ReactDOM;
-                
-                const { useState, useEffect, useMemo, useRef } = React;
-                
-                // Recharts
-                const RechartsObj = window.Recharts || {};
-                console.log("Recharts status:", !!window.Recharts);
-                const { 
-                    LineChart = () => null, 
-                    Line = () => null, 
-                    XAxis = () => null, 
-                    YAxis = () => null, 
-                    CartesianGrid = () => null, 
-                    Tooltip = () => null, 
-                    ResponsiveContainer = ({children}) => <div style={{width:'100%',height:'100%',display:'flex',alignItems:'center',justifyContent:'center',background:'#f8f9fa'}}>{children}</div>, 
-                    AreaChart = () => null, 
-                    Area = () => null,
-                    BarChart = () => null, 
-                    Bar = () => null, 
-                    Cell = () => null, 
-                    PieChart = () => null, 
-                    Pie = () => null
-                } = RechartsObj;
-                
-                // Framer Motion
-                const Motion = window.Motion || window.framerMotion || window.FramerMotion || {};
-                console.log("Motion status:", !!(window.Motion || window.framerMotion || window.FramerMotion));
-                const motion = Motion.motion || { 
-                    div: 'div', section: 'section', header: 'header', main: 'main', footer: 'footer', 
-                    h1: 'h1', h2: 'h2', h3: 'h3', h4: 'h4', p: 'p', span: 'span', 
-                    button: 'button', input: 'input', nav: 'nav', img: 'img'
-                };
-                const AnimatePresence = Motion.AnimatePresence || (({children}) => <React.Fragment>{children}</React.Fragment>);
-
-                // Lucide React
-                const LucideIcons = window.LucideReact || window.lucide || window.Lucide || {};
-                console.log("Lucide status:", !!(window.LucideReact || window.lucide || window.Lucide));
-                if (Object.keys(LucideIcons).length === 0) {
-                    console.warn("LucideIcons not found in global scope, icons may not display.");
-                }
-
-                // --- Utility Functions ---
-        function ipToNum(ip) {
-            return ip.split('.').reduce((a, o) => (a << 8) | +o, 0) >>> 0;
-        }
-
-        function numToIp(n) {
-            return [(n >>> 24) & 255, (n >>> 16) & 255, (n >>> 8) & 255, n & 255].join('.');
-        }
-
-        function prefixToMask(p) {
-            return p === 0 ? 0 : (0xFFFFFFFF << (32 - p)) >>> 0;
-        }
+        const cn = (...classes) => classes.filter(Boolean).join(' ');
 
         function calculateVcpu(vcpu, freq, util) {
             const capacity = vcpu * freq;
             const utilization = (util / capacity) * 100;
             const headroom = capacity - util;
             let status;
-            if (utilization <= 80) {
-                status = { cls: 'ok', label: 'Normal', msg: 'Workload is within allocated capacity.' };
-            } else if (utilization <= 100) {
-                status = { cls: 'hi', label: 'High', msg: 'Utilization is elevated. Monitor closely.' };
-            } else {
-                status = { cls: 'ov', label: 'Overutilized', msg: 'Workload demand exceeds allocated capacity — possible contention or overcommitment.' };
-            }
+            if (utilization <= 80) status = { cls: 'ok', label: 'Normal', msg: 'Workload is within allocated capacity.' };
+            else if (utilization <= 100) status = { cls: 'hi', label: 'High', msg: 'Utilization is elevated. Monitor closely.' };
+            else status = { cls: 'ov', label: 'Overutilized', msg: 'Workload demand exceeds allocated capacity — possible contention or overcommitment.' };
             return { capacity, observed: util, utilization, headroom, status };
         }
 
@@ -301,17 +254,17 @@
             const totalLogical = totalCores * threads;
             const peakGhz = totalLogical * freq;
             const usedGhz = peakGhz * (utilPct / 100);
-            const estPower = tdp !== null ? sockets * tdp * (utilPct / 100) : null;
+            const estPower = tdp ? sockets * tdp * (utilPct / 100) : null;
             let status;
-            if (utilPct <= 80) {
-                status = { cls: 'ok', label: 'Normal', msg: 'Workload is within allocated capacity.' };
-            } else if (utilPct <= 100) {
-                status = { cls: 'hi', label: 'High', msg: 'Utilization is elevated. Monitor closely.' };
-            } else {
-                status = { cls: 'ov', label: 'Overutilized', msg: 'Workload demand exceeds allocated capacity — possible contention or overcommitment.' };
-            }
+            if (utilPct <= 80) status = { cls: 'ok', label: 'Normal', msg: 'Workload is within allocated capacity.' };
+            else if (utilPct <= 100) status = { cls: 'hi', label: 'High', msg: 'Utilization is elevated. Monitor closely.' };
+            else status = { cls: 'ov', label: 'Overutilized', msg: 'Workload demand exceeds allocated capacity — possible contention or overcommitment.' };
             return { totalCores, totalLogical, peakGhz, usedGhz, utilization: utilPct, estPower, status };
         }
+
+        const ipToNum = (ip) => ip.split('.').reduce((a, o) => (a << 8) | +o, 0) >>> 0;
+        const numToIp = (n) => [(n >>> 24) & 255, (n >>> 16) & 255, (n >>> 8) & 255, n & 255].join('.');
+        const prefixToMask = (p) => p === 0 ? 0 : (0xFFFFFFFF << (32 - p)) >>> 0;
 
         function calculateSubnet(ipStr, maskStr) {
             const parseMask = (mk) => {
@@ -329,10 +282,8 @@
                 }
                 return null;
             };
-
             const prefix = parseMask(maskStr);
             if (prefix === null) return null;
-
             const maskNum = prefixToMask(prefix);
             const ipNum = ipToNum(ipStr);
             const networkNum = ipNum & maskNum;
@@ -343,7 +294,6 @@
             const usableHosts = prefix <= 30 ? totalHosts - 2 : prefix === 31 ? 2 : 1;
             const wildcardNum = ~maskNum >>> 0;
             const binMask = maskNum.toString(2).padStart(32, '0').match(/.{8}/g).join('.');
-
             const getIpClass = (first) => {
                 if (first < 128) return 'A';
                 if (first < 192) return 'B';
@@ -351,7 +301,6 @@
                 if (first < 240) return 'D (Multicast)';
                 return 'E (Reserved)';
             };
-
             const getIpType = (ip) => {
                 const [a, b] = ip.split('.').map(Number);
                 if (a === 10) return 'Private (RFC1918)';
@@ -362,13 +311,11 @@
                 if (a >= 224 && a <= 239) return 'Multicast';
                 return 'Public';
             };
-
             const splits = [];
             const splitPrefix = Math.max(prefix, 24);
             const splitCount = Math.pow(2, splitPrefix - prefix);
             const blockSize = Math.pow(2, 32 - splitPrefix);
             const rows = Math.min(splitCount, 64);
-
             for (let i = 0; i < rows; i++) {
                 const netN = networkNum + i * blockSize;
                 const bcN = netN + blockSize - 1;
@@ -384,7 +331,6 @@
                     lastHost: numToIp(lh)
                 });
             }
-
             return {
                 network: numToIp(networkNum),
                 broadcast: numToIp(broadcastNum),
@@ -405,7 +351,6 @@
             const capTB = cap / factor;
             const usedTB = used / factor;
             const rawTB = drives * capTB;
-            
             const getRaidUsable = (raw, drives, raid) => {
                 switch (raid) {
                     case '0': return raw;
@@ -417,96 +362,97 @@
                     default: return raw;
                 }
             };
-
             const usableTB = getRaidUsable(rawTB, drives, raid);
             const netAvailTB = usableTB * (1 - overhead / 100);
             const freeTB = Math.max(netAvailTB - usedTB, 0);
             const utilization = (usedTB / netAvailTB) * 100;
-
             let status;
-            if (utilization <= 70) {
-                status = { cls: 'ok', label: 'Normal', msg: 'Storage utilization is healthy with adequate headroom.' };
-            } else if (utilization <= 85) {
-                status = { cls: 'hi', label: 'High', msg: 'Utilization is elevated. Plan for capacity expansion.' };
-            } else {
-                status = { cls: 'ov', label: 'Critical', msg: 'Storage is critically full. Immediate expansion or cleanup required.' };
-            }
-
-            return { 
-                raw: rawTB * factor, 
-                usable: usableTB * factor, 
-                netAvail: netAvailTB * factor, 
-                used: usedTB * factor, 
-                free: freeTB * factor, 
-                utilization, 
-                status 
-            };
+            if (utilization <= 70) status = { cls: 'ok', label: 'Normal', msg: 'Storage utilization is healthy with adequate headroom.' };
+            else if (utilization <= 85) status = { cls: 'hi', label: 'High', msg: 'Utilization is elevated. Plan for capacity expansion.' };
+            else status = { cls: 'ov', label: 'Critical', msg: 'Storage is critically full. Immediate expansion or cleanup required.' };
+            return { raw: rawTB * factor, usable: usableTB * factor, netAvail: netAvailTB * factor, used: usedTB * factor, free: freeTB * factor, utilization, status };
         }
 
-        // --- Components ---
+        // --- UI Components ---
 
-        const Icon = ({ name, size = 20, className = "" }) => {
-            const LucideIcon = LucideIcons[name] || (LucideIcons.icons && LucideIcons.icons[name]);
-            if (!LucideIcon) return <span className="text-[8px] font-bold opacity-50">{name}</span>;
-            return <LucideIcon size={size} className={className} />;
+        const Icon = ({ name, size = 16, className = "" }) => {
+            const LucideIcon = lucide[name];
+            if (!LucideIcon) return null;
+            return <i data-lucide={name} className={className} style={{ width: size, height: size }}></i>;
         };
 
-        const StatusBadge = ({ status }) => (
-            <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium prtg-card ${
-                status.cls === 'ok' ? 'text-green-600 bg-green-50 border-green-200' :
-                status.cls === 'hi' ? 'text-amber-600 bg-amber-50 border-amber-200' :
-                'text-red-600 bg-red-50 border-red-200'
-            }`}>
-                <div className={`w-2 h-2 rounded-full ${
-                    status.cls === 'ok' ? 'bg-green-500' :
-                    status.cls === 'hi' ? 'bg-amber-500' :
-                    'bg-red-500'
-                }`} />
-                {status.label}
-            </div>
-        );
+        useEffect(() => {
+            lucide.createIcons();
+        });
 
-        const MetricCard = ({ label, value, unit, icon, trend }) => (
-            <div className="prtg-card p-4 flex flex-col gap-1">
-                <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-secondary">
-                    <span>{label}</span>
-                    <Icon name={icon} size={14} />
+        const StatusBadge = ({ status }) => {
+            const colors = {
+                ok: 'bg-[#e8f5e9] text-[#00b050] border-[#00b050]/20',
+                hi: 'bg-[#fff9c4] text-[#f57f17] border-[#f57f17]/20',
+                ov: 'bg-[#ffebee] text-[#b71c1c] border-[#b71c1c]/20'
+            };
+            const dots = {
+                ok: 'bg-[#00b050] shadow-[0_0_8px_rgba(0,176,80,0.4)]',
+                hi: 'bg-[#ffc000] shadow-[0_0_8px_rgba(255,192,0,0.4)]',
+                ov: 'bg-[#ff0000] shadow-[0_0_8px_rgba(255,0,0,0.4)]'
+            };
+            return (
+                <div className={cn("inline-flex items-center gap-2 rounded-sm border px-3 py-1 font-sans text-[11px] font-bold uppercase tracking-wider", colors[status.cls])}>
+                    <div className={cn("h-2 w-2 rounded-full", dots[status.cls])} />
+                    {status.label}
                 </div>
-                <div className="flex items-baseline gap-1">
-                    <span className="text-2xl font-bold">{value}</span>
-                    <span className="text-sm font-medium text-secondary">{unit}</span>
-                </div>
-                {trend && (
-                    <div className={`text-xs font-medium ${trend > 0 ? 'text-green-500' : 'text-red-500'}`}>
-                        {trend > 0 ? '↑' : '↓'} {Math.abs(trend)}% vs last
+            );
+        };
+
+        const MetricCard = ({ label, value, unit, status }) => {
+            const statusColor = status === 'ok' ? '#00b050' : status === 'hi' ? '#ffc000' : status === 'ov' ? '#ff0000' : '#00b0f0';
+            return (
+                <div className="relative overflow-hidden rounded-sm border border-[var(--border)] bg-[var(--bg-card)] p-5 shadow-sm transition-all hover:shadow-md">
+                    <div className="absolute top-0 left-0 h-full w-1" style={{ backgroundColor: statusColor }} />
+                    <div className="font-sans text-[10px] font-bold tracking-wider uppercase text-[var(--text-sec)]">{label}</div>
+                    <div className="mt-2 flex items-baseline gap-1.5">
+                        <span className="font-sans text-2xl font-bold tracking-tight text-[var(--text-primary)]">{value}</span>
+                        <span className="font-sans text-[10px] font-bold text-[var(--text-sec)] uppercase">{unit}</span>
                     </div>
-                )}
-            </div>
-        );
+                </div>
+            );
+        };
 
-        const ProgressBar = ({ value, label, statusCls }) => (
-            <div className="space-y-1">
-                <div className="flex justify-between text-xs font-medium">
-                    <span className="text-secondary">{label}</span>
-                    <span className="font-bold">{value.toFixed(1)}%</span>
+        const ProgressBar = ({ title, pct, status, thresholds }) => {
+            const barColor = status === 'ok' ? 'var(--prtg-green)' : status === 'hi' ? 'var(--prtg-yellow)' : 'var(--prtg-red)';
+            return (
+                <div className="rounded-sm border border-[var(--border)] bg-[var(--bg-card)] p-6 shadow-sm">
+                    <div className="mb-4 flex items-baseline justify-between">
+                        <span className="font-sans text-[11px] font-bold tracking-[0.05em] uppercase text-[var(--text-sec)]">{title}</span>
+                        <span className="font-sans text-2xl font-bold text-[var(--text-primary)]">{pct.toFixed(3)}%</span>
+                    </div>
+                    <div className="relative h-5 w-full overflow-hidden rounded-sm bg-[#e0e0e0] border border-black/10 shadow-inner">
+                        <motion.div 
+                            initial={{ width: 0 }}
+                            animate={{ width: `${Math.min(pct, 100)}%` }}
+                            transition={{ duration: 1, ease: "easeOut" }}
+                            className="h-full relative"
+                            style={{ backgroundColor: barColor }}
+                        >
+                            <div className="absolute inset-0 bg-gradient-to-b from-white/40 via-white/10 to-transparent h-[48%]" />
+                            <div className="absolute inset-x-0 bottom-0 bg-black/5 h-[50%]" />
+                            <div className="absolute inset-0 flex">
+                                {Array.from({ length: 10 }).map((_, i) => (
+                                    <div key={i} className="h-full w-px bg-black/5 flex-1 border-r border-white/10" />
+                                ))}
+                            </div>
+                        </motion.div>
+                        <div className="absolute top-0 h-full w-px bg-red-500/30 z-10" style={{ left: '70%' }} />
+                        <div className="absolute top-0 h-full w-px bg-red-600/40 z-10" style={{ left: '85%' }} />
+                    </div>
+                    <div className="mt-3 flex justify-between px-1">
+                        <span className="font-sans text-[10px] text-[var(--text-sec)]">0%</span>
+                        <span className="font-sans text-[10px] text-[var(--text-sec)]">Warning 70%</span>
+                        <span className="font-sans text-[10px] text-[var(--text-sec)]">Critical 85%</span>
+                    </div>
                 </div>
-                <div className="h-3 w-full bg-gray-200 rounded-full overflow-hidden border border-gray-300">
-                    <motion.div 
-                        initial={{ width: 0 }}
-                        animate={{ width: `${Math.min(value, 100)}%` }}
-                        className={`h-full transition-all duration-500 ${
-                            statusCls === 'ok' ? 'bg-status-ok' :
-                            statusCls === 'hi' ? 'bg-status-hi' :
-                            'bg-status-ov'
-                        }`}
-                        style={{
-                            width: Motion.motion ? undefined : `${Math.min(value, 100)}%`,
-                            backgroundImage: 'linear-gradient(to bottom, rgba(255,255,255,0.3), transparent)'
-                        }}
-                    />
-                </div>
-            </div>
-        );
+            );
+        };
 
         // --- Main App Component ---
 
@@ -515,15 +461,21 @@
             const [theme, setTheme] = useState(localStorage.getItem('prtg-theme') || 'light');
             const [logo, setLogo] = useState(localStorage.getItem('prtg-logo') || null);
 
-            // State for each tab
-            const [vcpuInputs, setVcpuInputs] = useState({ vcpu: 8, freq: 2.4, util: 12 });
-            const [pcpuInputs, setPcpuInputs] = useState({ sockets: 2, cores: 12, threads: 2, freq: 2.6, utilPct: 45, tdp: 125 });
-            const [subnetInputs, setSubnetInputs] = useState({ ip: '192.168.1.0', mask: '24' });
-            const [storageInputs, setStorageInputs] = useState({ drives: 12, cap: 1.2, raid: '10', used: 4.5, overhead: 15, unit: 'TB' });
+            // Inputs State
+            const [vInput, setVInput] = useState({ vcpu: '72', freq: '3.2', util: '227.616' });
+            const [pInput, setPInput] = useState({ sockets: '2', cores: '12', threads: '2', freq: '2.6', util: '45', tdp: '125' });
+            const [snInput, setSnInput] = useState({ ip: '192.168.1.0', mask: '24' });
+            const [stInput, setStInput] = useState({ drives: '12', cap: '1.2', raid: '10', used: '4.5', overhead: '15' });
+            const [stUnit, setStUnit] = useState('TB');
 
-            // History state
+            // Results State
+            const vResult = useMemo(() => calculateVcpu(parseFloat(vInput.vcpu), parseFloat(vInput.freq), parseFloat(vInput.util)), [vInput]);
+            const pResult = useMemo(() => calculatePcpu(parseFloat(pInput.sockets), parseFloat(pInput.cores), parseFloat(pInput.threads), parseFloat(pInput.freq), parseFloat(pInput.util), pInput.tdp ? parseFloat(pInput.tdp) : null), [pInput]);
+            const snResult = useMemo(() => calculateSubnet(snInput.ip, snInput.mask), [snInput]);
+            const stResult = useMemo(() => calculateStorage(parseFloat(stInput.drives), parseFloat(stInput.cap), stInput.raid, parseFloat(stInput.used), parseFloat(stInput.overhead), stUnit), [stInput, stUnit]);
+
             const [history, setHistory] = useState(() => {
-                const saved = localStorage.getItem('prtg-history');
+                const saved = localStorage.getItem('prtg-history-v2');
                 return saved ? JSON.parse(saved) : [];
             });
 
@@ -533,13 +485,8 @@
             }, [theme]);
 
             useEffect(() => {
-                localStorage.setItem('prtg-history', JSON.stringify(history));
+                localStorage.setItem('prtg-history-v2', JSON.stringify(history));
             }, [history]);
-
-            const vcpuResult = useMemo(() => calculateVcpu(vcpuInputs.vcpu, vcpuInputs.freq, vcpuInputs.util), [vcpuInputs]);
-            const pcpuResult = useMemo(() => calculatePcpu(pcpuInputs.sockets, pcpuInputs.cores, pcpuInputs.threads, pcpuInputs.freq, pcpuInputs.utilPct, pcpuInputs.tdp), [pcpuInputs]);
-            const subnetResult = useMemo(() => calculateSubnet(subnetInputs.ip, subnetInputs.mask), [subnetInputs]);
-            const storageResult = useMemo(() => calculateStorage(storageInputs.drives, storageInputs.cap, storageInputs.raid, storageInputs.used, storageInputs.overhead, storageInputs.unit), [storageInputs]);
 
             const handleLogoUpload = (e) => {
                 const file = e.target.files[0];
@@ -555,31 +502,21 @@
             };
 
             const addToHistory = (type, data) => {
-                const entry = {
-                    id: Date.now(),
-                    timestamp: new Date().toLocaleString(),
-                    type,
-                    data
-                };
+                const entry = { id: Date.now(), timestamp: new Date().toLocaleString(), type, data };
                 setHistory(prev => [entry, ...prev].slice(0, 50));
             };
 
             const exportToCSV = () => {
-                let csvContent = "data:text/csv;charset=utf-8,";
-                csvContent += "Timestamp,Type,Metric,Value,Unit\n";
-                
-                history.forEach(entry => {
-                    Object.entries(entry.data).forEach(([key, val]) => {
-                        if (typeof val !== 'object') {
-                            csvContent += `${entry.timestamp},${entry.type},${key},${val},""\n`;
-                        }
+                let csvContent = "data:text/csv;charset=utf-8,Timestamp,Type,Metric,Value\n";
+                history.forEach(h => {
+                    Object.entries(h.data).forEach(([k, v]) => {
+                        if (typeof v !== 'object') csvContent += `${h.timestamp},${h.type},${k},${v}\n`;
                     });
                 });
-
                 const encodedUri = encodeURI(csvContent);
                 const link = document.createElement("a");
                 link.setAttribute("href", encodedUri);
-                link.setAttribute("download", "prtg_calc_history.csv");
+                link.setAttribute("download", "capacity_history.csv");
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
@@ -587,449 +524,301 @@
 
             const exportToExcel = () => {
                 const wb = XLSX.utils.book_new();
-                
-                // History Sheet
                 const historyData = history.map(h => ({
                     Timestamp: h.timestamp,
                     Type: h.type.toUpperCase(),
                     ...Object.fromEntries(Object.entries(h.data).filter(([_, v]) => typeof v !== 'object'))
                 }));
-                const wsHistory = XLSX.utils.json_to_sheet(historyData);
-                XLSX.utils.book_append_sheet(wb, wsHistory, "History");
-
-                // Subnet Splits if available
-                if (subnetResult && subnetResult.splits) {
-                    const wsSubnet = XLSX.utils.json_to_sheet(subnetResult.splits);
-                    XLSX.utils.book_append_sheet(wb, wsSubnet, "Subnet Splits");
-                }
-
-                XLSX.writeFile(wb, "PRTG_Infrastructure_Report.xlsx");
+                const ws = XLSX.utils.json_to_sheet(historyData);
+                XLSX.utils.book_append_sheet(wb, ws, "History");
+                XLSX.writeFile(wb, "Infrastructure_Report.xlsx");
             };
 
             const exportToPDF = () => {
                 const { jsPDF } = window.jspdf;
                 const doc = new jsPDF();
-                
-                if (logo) {
-                    try {
-                        doc.addImage(logo, 'PNG', 10, 10, 40, 15);
-                    } catch (e) { console.error("Logo error", e); }
-                }
-
-                doc.setFontSize(20);
-                doc.text("Infrastructure Capacity Report", 60, 20);
+                doc.setFontSize(18);
+                doc.text("Infrastructure Capacity Report", 14, 20);
                 doc.setFontSize(10);
-                doc.text(`Generated: ${new Date().toLocaleString()}`, 60, 28);
-
-                let y = 40;
-
-                const addSection = (title, data) => {
-                    doc.setFontSize(14);
-                    doc.setTextColor(0, 160, 227);
-                    doc.text(title, 10, y);
-                    y += 10;
-                    doc.autoTable({
-                        startY: y,
-                        head: [['Metric', 'Value']],
-                        body: Object.entries(data).filter(([_, v]) => typeof v !== 'object').map(([k, v]) => [k, v]),
-                        theme: 'striped',
-                        headStyles: { fillColor: [0, 160, 227] }
-                    });
-                    y = doc.lastAutoTable.finalY + 15;
-                };
-
-                if (activeTab === 'vcpu') addSection("vCPU Analysis", vcpuResult);
-                if (activeTab === 'pcpu') addSection("pCPU Analysis", pcpuResult);
-                if (activeTab === 'subnet') addSection("Subnet Analysis", subnetResult);
-                if (activeTab === 'storage') addSection("Storage Analysis", storageResult);
-
-                doc.save("PRTG_Infrastructure_Report.pdf");
+                doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 28);
+                
+                const data = history.map(h => [h.timestamp, h.type.toUpperCase(), JSON.stringify(h.data).substring(0, 50)]);
+                doc.autoTable({
+                    startY: 35,
+                    head: [['Timestamp', 'Type', 'Data Summary']],
+                    body: data,
+                });
+                doc.save("Infrastructure_Report.pdf");
             };
 
             return (
                 <div className="min-h-screen flex flex-col">
                     {/* Header */}
-                    <header className="prtg-header px-6 py-4 flex items-center justify-between sticky top-0 z-50">
-                        <div className="flex items-center gap-4">
-                            <div className="relative group cursor-pointer">
+                    <header className="sticky top-0 z-50 flex items-center justify-between border-b border-[var(--border)] bg-[var(--bg-card)] px-7 py-3.5 backdrop-blur-md transition-all">
+                        <div className="flex items-center gap-3">
+                            <div className="relative h-10 w-10 shrink-0">
                                 {logo ? (
-                                    <img src={logo} alt="Logo" className="h-10 object-contain" />
+                                    <img src={logo} alt="Logo" className="h-10 w-10 rounded-lg object-contain" />
                                 ) : (
-                                    <div className="h-10 w-32 bg-gray-100 border-2 border-dashed border-gray-300 rounded flex items-center justify-center text-xs text-gray-400">
-                                        Upload Logo
-                                    </div>
+                                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[var(--accent)] text-xl font-extrabold text-white">⚙</div>
                                 )}
-                                <input 
-                                    type="file" 
-                                    accept="image/*" 
-                                    className="absolute inset-0 opacity-0 cursor-pointer" 
-                                    onChange={handleLogoUpload}
-                                />
+                                <label className="absolute -right-1 -bottom-1 flex h-4.5 w-4.5 cursor-pointer items-center justify-center rounded-full border border-[var(--border)] bg-[var(--bg-card)] text-[10px] transition-colors hover:bg-[var(--accent-dim)]">
+                                    📁
+                                    <input type="file" className="hidden" accept="image/*" onChange={handleLogoUpload} />
+                                </label>
                             </div>
-                            <div className="h-8 w-px bg-gray-200" />
-                            <h1 className="text-xl font-bold tracking-tight">Infrastructure Calculator</h1>
+                            <div>
+                                <div className="text-[0.98rem] font-extrabold tracking-tight text-[var(--text-primary)]">IT Infrastructure Capacity Tools</div>
+                                <div className="mt-0.5 font-mono text-[0.68rem] text-[var(--text-sec)]">infrastructure planning · v2.1 Standalone</div>
+                            </div>
                         </div>
-
-                        <div className="flex items-center gap-4">
-                            <div className="flex items-center gap-2 prtg-card p-1 rounded-lg">
+                        <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-1 rounded-lg border border-[var(--border)] bg-[var(--bg-input)] p-1">
                                 {[
-                                    { id: 'light', color: 'bg-white', border: 'border-gray-200' },
-                                    { id: 'dark', color: 'bg-gray-800', border: 'border-gray-600' },
-                                    { id: 'slate', color: 'bg-slate-700', border: 'border-slate-500' },
-                                    { id: 'emerald', color: 'bg-emerald-700', border: 'border-emerald-500' },
-                                    { id: 'amber', color: 'bg-amber-700', border: 'border-amber-500' }
-                                ].map(t => (
+                                    { id: 'light', color: '#ffffff', title: 'Light' },
+                                    { id: 'dark', color: '#1c1c1a', title: 'Dark' },
+                                    { id: 'slate', color: '#1e293b', title: 'Slate' },
+                                    { id: 'emerald', color: '#065f46', title: 'Emerald' },
+                                    { id: 'amber', color: '#78350f', title: 'Amber' },
+                                ].map((t) => (
                                     <button
                                         key={t.id}
                                         onClick={() => setTheme(t.id)}
-                                        className={`w-6 h-6 rounded-full border-2 ${t.color} ${t.border} ${theme === t.id ? 'ring-2 ring-blue-400 ring-offset-1' : ''}`}
-                                        title={t.id.charAt(0).toUpperCase() + t.id.slice(1)}
+                                        title={t.title}
+                                        className={cn(
+                                            "flex h-7 w-7 items-center justify-center rounded-md transition-all",
+                                            theme === t.id ? "bg-[var(--accent)] text-white shadow-sm" : "text-[var(--text-sec)] hover:bg-[var(--accent-dim)]"
+                                        )}
+                                        style={{ backgroundColor: theme === t.id ? undefined : t.color, border: '1px solid var(--border)' }}
                                     />
                                 ))}
-                            </div>
-
-                            <div className="flex items-center gap-2">
-                                <button onClick={exportToCSV} className="p-2 hover:bg-gray-100 rounded-lg transition-colors" title="Export CSV">
-                                    <Icon name="FileText" size={20} />
-                                </button>
-                                <button onClick={exportToExcel} className="p-2 hover:bg-gray-100 rounded-lg transition-colors" title="Export Excel">
-                                    <Icon name="FileSpreadsheet" size={20} />
-                                </button>
-                                <button onClick={exportToPDF} className="p-2 hover:bg-gray-100 rounded-lg transition-colors" title="Export PDF">
-                                    <Icon name="Download" size={20} />
-                                </button>
                             </div>
                         </div>
                     </header>
 
                     {/* Navigation */}
-                    <nav className="bg-secondary border-b border-gray-200 px-6 flex items-center gap-8">
+                    <nav className="flex gap-0.5 overflow-x-auto border-b border-[var(--border)] bg-[var(--bg-card)] px-7 transition-all">
                         {[
-                            { id: 'vcpu', label: 'vCPU', icon: 'Cpu' },
-                            { id: 'pcpu', label: 'pCPU', icon: 'HardDrive' },
-                            { id: 'subnet', label: 'Subnet', icon: 'Network' },
-                            { id: 'storage', label: 'Storage', icon: 'Database' }
-                        ].map(tab => (
+                            { id: 'vcpu', label: 'vCPU Utilization' },
+                            { id: 'pcpu', label: 'Physical CPU' },
+                            { id: 'subnet', label: 'Subnet Calculator' },
+                            { id: 'storage', label: 'Storage Capacity' },
+                        ].map((tab) => (
                             <button
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id)}
-                                className={`py-4 px-2 flex items-center gap-2 text-sm font-bold transition-all ${
-                                    activeTab === tab.id ? 'prtg-tab-active' : 'text-secondary hover:text-primary'
-                                }`}
+                                className={cn(
+                                    "flex shrink-0 items-center gap-2 border-b-[2.5px] px-5 py-3 text-[0.8rem] font-bold tracking-wide transition-all",
+                                    activeTab === tab.id ? "border-[var(--accent)] text-[var(--accent)]" : "border-transparent text-[var(--text-sec)] hover:text-[var(--text-primary)]"
+                                )}
                             >
-                                <Icon name={tab.icon} size={18} />
                                 {tab.label}
                             </button>
                         ))}
                     </nav>
 
                     {/* Main Content */}
-                    <main className="flex-1 p-6 overflow-auto">
+                    <main className="mx-auto max-w-[960px] px-5 pt-8 pb-16 w-full">
                         <AnimatePresence mode="wait">
                             <motion.div
                                 key={activeTab}
                                 initial={{ opacity: 0, y: 10 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: -10 }}
-                                className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6"
+                                className="space-y-8"
                             >
-                                {/* Inputs Panel */}
-                                <div className="lg:col-span-1 space-y-6">
-                                    <div className="prtg-card p-6">
-                                        <h2 className="text-lg font-bold mb-6 flex items-center gap-2">
-                                            <Icon name="Settings" />
-                                            Configuration
-                                        </h2>
-                                        
-                                        {activeTab === 'vcpu' && (
-                                            <div className="space-y-4">
-                                                <div>
-                                                    <label className="block text-xs font-bold uppercase text-secondary mb-1">vCPU Count</label>
-                                                    <input 
-                                                        type="number" 
-                                                        className="w-full p-2 prtg-input rounded"
-                                                        value={vcpuInputs.vcpu}
-                                                        onChange={e => setVcpuInputs(prev => ({ ...prev, vcpu: +e.target.value }))}
-                                                    />
-                                                </div>
-                                                <div>
-                                                    <label className="block text-xs font-bold uppercase text-secondary mb-1">Frequency (GHz)</label>
-                                                    <input 
-                                                        type="number" 
-                                                        step="0.1"
-                                                        className="w-full p-2 prtg-input rounded"
-                                                        value={vcpuInputs.freq}
-                                                        onChange={e => setVcpuInputs(prev => ({ ...prev, freq: +e.target.value }))}
-                                                    />
-                                                </div>
-                                                <div>
-                                                    <label className="block text-xs font-bold uppercase text-secondary mb-1">Observed Load (GHz)</label>
-                                                    <input 
-                                                        type="number" 
-                                                        step="0.1"
-                                                        className="w-full p-2 prtg-input rounded"
-                                                        value={vcpuInputs.util}
-                                                        onChange={e => setVcpuInputs(prev => ({ ...prev, util: +e.target.value }))}
-                                                    />
-                                                </div>
-                                                <button 
-                                                    onClick={() => addToHistory('vcpu', vcpuResult)}
-                                                    className="w-full py-2 prtg-button rounded font-bold mt-4"
-                                                >
-                                                    Calculate & Save
-                                                </button>
+                                {/* Inputs */}
+                                <div className="rounded-[var(--r)] border border-[var(--border)] bg-[var(--bg-card)] p-6 shadow-[var(--shadow)]">
+                                    <div className="mb-4 font-mono text-[0.67rem] font-bold tracking-[0.12em] uppercase text-[var(--text-sec)]">Configuration Inputs</div>
+                                    
+                                    {activeTab === 'vcpu' && (
+                                        <div className="grid grid-cols-1 gap-4.5 sm:grid-cols-3">
+                                            <div className="flex flex-col gap-1.5">
+                                                <label className="text-[0.76rem] font-semibold text-[var(--text-sec)]">vCPUs Allocated</label>
+                                                <input type="number" value={vInput.vcpu} onChange={e => setVInput({...vInput, vcpu: e.target.value})} className="w-full rounded-lg border-[1.5px] border-[var(--border)] bg-[var(--bg-input)] px-3 py-2 font-mono" />
                                             </div>
-                                        )}
-
-                                        {activeTab === 'pcpu' && (
-                                            <div className="space-y-4">
-                                                <div className="grid grid-cols-2 gap-4">
-                                                    <div>
-                                                        <label className="block text-xs font-bold uppercase text-secondary mb-1">Sockets</label>
-                                                        <input type="number" className="w-full p-2 prtg-input rounded" value={pcpuInputs.sockets} onChange={e => setPcpuInputs(p => ({ ...p, sockets: +e.target.value }))} />
-                                                    </div>
-                                                    <div>
-                                                        <label className="block text-xs font-bold uppercase text-secondary mb-1">Cores/Socket</label>
-                                                        <input type="number" className="w-full p-2 prtg-input rounded" value={pcpuInputs.cores} onChange={e => setPcpuInputs(p => ({ ...p, cores: +e.target.value }))} />
-                                                    </div>
-                                                </div>
-                                                <div>
-                                                    <label className="block text-xs font-bold uppercase text-secondary mb-1">Threads/Core</label>
-                                                    <input type="number" className="w-full p-2 prtg-input rounded" value={pcpuInputs.threads} onChange={e => setPcpuInputs(p => ({ ...p, threads: +e.target.value }))} />
-                                                </div>
-                                                <div>
-                                                    <label className="block text-xs font-bold uppercase text-secondary mb-1">Frequency (GHz)</label>
-                                                    <input type="number" step="0.1" className="w-full p-2 prtg-input rounded" value={pcpuInputs.freq} onChange={e => setPcpuInputs(p => ({ ...p, freq: +e.target.value }))} />
-                                                </div>
-                                                <div>
-                                                    <label className="block text-xs font-bold uppercase text-secondary mb-1">Utilization (%)</label>
-                                                    <input type="range" min="0" max="150" className="w-full" value={pcpuInputs.utilPct} onChange={e => setPcpuInputs(p => ({ ...p, utilPct: +e.target.value }))} />
-                                                    <div className="text-right text-xs font-bold">{pcpuInputs.utilPct}%</div>
-                                                </div>
-                                                <button onClick={() => addToHistory('pcpu', pcpuResult)} className="w-full py-2 prtg-button rounded font-bold mt-4">Calculate & Save</button>
+                                            <div className="flex flex-col gap-1.5">
+                                                <label className="text-[0.76rem] font-semibold text-[var(--text-sec)]">Frequency (GHz)</label>
+                                                <input type="number" step="0.1" value={vInput.freq} onChange={e => setVInput({...vInput, freq: e.target.value})} className="w-full rounded-lg border-[1.5px] border-[var(--border)] bg-[var(--bg-input)] px-3 py-2 font-mono" />
                                             </div>
-                                        )}
-
-                                        {activeTab === 'subnet' && (
-                                            <div className="space-y-4">
-                                                <div>
-                                                    <label className="block text-xs font-bold uppercase text-secondary mb-1">Base IP Address</label>
-                                                    <input type="text" className="w-full p-2 prtg-input rounded" value={subnetInputs.ip} onChange={e => setSubnetInputs(p => ({ ...p, ip: e.target.value }))} />
-                                                </div>
-                                                <div>
-                                                    <label className="block text-xs font-bold uppercase text-secondary mb-1">Mask (CIDR or Dec)</label>
-                                                    <input type="text" className="w-full p-2 prtg-input rounded" value={subnetInputs.mask} onChange={e => setSubnetInputs(p => ({ ...p, mask: e.target.value }))} />
-                                                </div>
-                                                <button onClick={() => addToHistory('subnet', subnetResult)} className="w-full py-2 prtg-button rounded font-bold mt-4">Calculate & Save</button>
+                                            <div className="flex flex-col gap-1.5">
+                                                <label className="text-[0.76rem] font-semibold text-[var(--text-sec)]">Observed Load (GHz)</label>
+                                                <input type="number" step="0.1" value={vInput.util} onChange={e => setVInput({...vInput, util: e.target.value})} className="w-full rounded-lg border-[1.5px] border-[var(--border)] bg-[var(--bg-input)] px-3 py-2 font-mono" />
                                             </div>
-                                        )}
+                                        </div>
+                                    )}
 
-                                        {activeTab === 'storage' && (
-                                            <div className="space-y-4">
-                                                <div className="grid grid-cols-2 gap-4">
-                                                    <div>
-                                                        <label className="block text-xs font-bold uppercase text-secondary mb-1">Drive Count</label>
-                                                        <input type="number" className="w-full p-2 prtg-input rounded" value={storageInputs.drives} onChange={e => setStorageInputs(p => ({ ...p, drives: +e.target.value }))} />
-                                                    </div>
-                                                    <div>
-                                                        <label className="block text-xs font-bold uppercase text-secondary mb-1">Capacity</label>
-                                                        <input type="number" step="0.1" className="w-full p-2 prtg-input rounded" value={storageInputs.cap} onChange={e => setStorageInputs(p => ({ ...p, cap: +e.target.value }))} />
-                                                    </div>
-                                                </div>
-                                                <div className="grid grid-cols-2 gap-4">
-                                                    <div>
-                                                        <label className="block text-xs font-bold uppercase text-secondary mb-1">Unit</label>
-                                                        <select className="w-full p-2 prtg-input rounded" value={storageInputs.unit} onChange={e => setStorageInputs(p => ({ ...p, unit: e.target.value }))}>
-                                                            <option value="GB">GB</option>
-                                                            <option value="TB">TB</option>
-                                                        </select>
-                                                    </div>
-                                                    <div>
-                                                        <label className="block text-xs font-bold uppercase text-secondary mb-1">RAID Level</label>
-                                                        <select className="w-full p-2 prtg-input rounded" value={storageInputs.raid} onChange={e => setStorageInputs(p => ({ ...p, raid: e.target.value }))}>
-                                                            <option value="none">None</option>
-                                                            <option value="0">RAID 0</option>
-                                                            <option value="1">RAID 1</option>
-                                                            <option value="5">RAID 5</option>
-                                                            <option value="6">RAID 6</option>
-                                                            <option value="10">RAID 10</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div>
-                                                    <label className="block text-xs font-bold uppercase text-secondary mb-1">Used Space ({storageInputs.unit})</label>
-                                                    <input type="number" step="0.1" className="w-full p-2 prtg-input rounded" value={storageInputs.used} onChange={e => setStorageInputs(p => ({ ...p, used: +e.target.value }))} />
-                                                </div>
-                                                <button onClick={() => addToHistory('storage', storageResult)} className="w-full py-2 prtg-button rounded font-bold mt-4">Calculate & Save</button>
+                                    {activeTab === 'pcpu' && (
+                                        <div className="grid grid-cols-1 gap-4.5 sm:grid-cols-3">
+                                            <div className="flex flex-col gap-1.5">
+                                                <label className="text-[0.76rem] font-semibold text-[var(--text-sec)]">Sockets</label>
+                                                <input type="number" value={pInput.sockets} onChange={e => setPInput({...pInput, sockets: e.target.value})} className="w-full rounded-lg border-[1.5px] border-[var(--border)] bg-[var(--bg-input)] px-3 py-2 font-mono" />
                                             </div>
-                                        )}
-                                    </div>
+                                            <div className="flex flex-col gap-1.5">
+                                                <label className="text-[0.76rem] font-semibold text-[var(--text-sec)]">Cores/Socket</label>
+                                                <input type="number" value={pInput.cores} onChange={e => setPInput({...pInput, cores: e.target.value})} className="w-full rounded-lg border-[1.5px] border-[var(--border)] bg-[var(--bg-input)] px-3 py-2 font-mono" />
+                                            </div>
+                                            <div className="flex flex-col gap-1.5">
+                                                <label className="text-[0.76rem] font-semibold text-[var(--text-sec)]">Threads/Core</label>
+                                                <input type="number" value={pInput.threads} onChange={e => setPInput({...pInput, threads: e.target.value})} className="w-full rounded-lg border-[1.5px] border-[var(--border)] bg-[var(--bg-input)] px-3 py-2 font-mono" />
+                                            </div>
+                                        </div>
+                                    )}
 
-                                    {/* Quick Stats */}
-                                    <div className="prtg-card p-6">
-                                        <h3 className="text-sm font-bold uppercase text-secondary mb-4">Quick Status</h3>
-                                        {activeTab === 'vcpu' && <StatusBadge status={vcpuResult.status} />}
-                                        {activeTab === 'pcpu' && <StatusBadge status={pcpuResult.status} />}
-                                        {activeTab === 'storage' && <StatusBadge status={storageResult.status} />}
-                                        {activeTab === 'subnet' && <div className="text-sm font-bold text-accent">{subnetResult?.ipType} {subnetResult?.ipClass}</div>}
-                                        
-                                        <p className="mt-4 text-sm text-secondary leading-relaxed">
-                                            {activeTab === 'vcpu' && vcpuResult.status.msg}
-                                            {activeTab === 'pcpu' && pcpuResult.status.msg}
-                                            {activeTab === 'storage' && storageResult.status.msg}
-                                            {activeTab === 'subnet' && `Network: ${subnetResult?.network} | Hosts: ${subnetResult?.hosts.toLocaleString()}`}
-                                        </p>
+                                    {activeTab === 'subnet' && (
+                                        <div className="grid grid-cols-1 gap-4.5 sm:grid-cols-2">
+                                            <div className="flex flex-col gap-1.5">
+                                                <label className="text-[0.76rem] font-semibold text-[var(--text-sec)]">Base IP</label>
+                                                <input type="text" value={snInput.ip} onChange={e => setSnInput({...snInput, ip: e.target.value})} className="w-full rounded-lg border-[1.5px] border-[var(--border)] bg-[var(--bg-input)] px-3 py-2 font-mono" />
+                                            </div>
+                                            <div className="flex flex-col gap-1.5">
+                                                <label className="text-[0.76rem] font-semibold text-[var(--text-sec)]">Mask (CIDR or Dec)</label>
+                                                <input type="text" value={snInput.mask} onChange={e => setSnInput({...snInput, mask: e.target.value})} className="w-full rounded-lg border-[1.5px] border-[var(--border)] bg-[var(--bg-input)] px-3 py-2 font-mono" />
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {activeTab === 'storage' && (
+                                        <div className="grid grid-cols-1 gap-4.5 sm:grid-cols-3">
+                                            <div className="flex flex-col gap-1.5">
+                                                <label className="text-[0.76rem] font-semibold text-[var(--text-sec)]">Drive Count</label>
+                                                <input type="number" value={stInput.drives} onChange={e => setStInput({...stInput, drives: e.target.value})} className="w-full rounded-lg border-[1.5px] border-[var(--border)] bg-[var(--bg-input)] px-3 py-2 font-mono" />
+                                            </div>
+                                            <div className="flex flex-col gap-1.5">
+                                                <label className="text-[0.76rem] font-semibold text-[var(--text-sec)]">Capacity</label>
+                                                <input type="number" step="0.1" value={stInput.cap} onChange={e => setStInput({...stInput, cap: e.target.value})} className="w-full rounded-lg border-[1.5px] border-[var(--border)] bg-[var(--bg-input)] px-3 py-2 font-mono" />
+                                            </div>
+                                            <div className="flex flex-col gap-1.5">
+                                                <label className="text-[0.76rem] font-semibold text-[var(--text-sec)]">RAID Level</label>
+                                                <select value={stInput.raid} onChange={e => setStInput({...stInput, raid: e.target.value})} className="w-full rounded-lg border-[1.5px] border-[var(--border)] bg-[var(--bg-input)] px-3 py-2 font-mono">
+                                                    <option value="0">RAID 0</option>
+                                                    <option value="1">RAID 1</option>
+                                                    <option value="5">RAID 5</option>
+                                                    <option value="6">RAID 6</option>
+                                                    <option value="10">RAID 10</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    <div className="mt-6 flex gap-3">
+                                        <button 
+                                            onClick={() => {
+                                                if(activeTab === 'vcpu') addToHistory('vcpu', vResult);
+                                                if(activeTab === 'pcpu') addToHistory('pcpu', pResult);
+                                                if(activeTab === 'subnet') addToHistory('subnet', snResult);
+                                                if(activeTab === 'storage') addToHistory('storage', stResult);
+                                            }}
+                                            className="rounded-lg bg-[var(--accent)] px-6 py-2 text-sm font-bold text-white hover:opacity-90"
+                                        >
+                                            Save to History
+                                        </button>
+                                        <div className="flex-1" />
+                                        <button onClick={exportToCSV} className="px-4 py-2 border border-[var(--border)] rounded-lg text-xs font-bold uppercase text-[var(--text-sec)]">CSV</button>
+                                        <button onClick={exportToExcel} className="px-4 py-2 border border-[var(--border)] rounded-lg text-xs font-bold uppercase text-[var(--text-sec)]">XLS</button>
+                                        <button onClick={exportToPDF} className="px-4 py-2 border border-[var(--border)] rounded-lg text-xs font-bold uppercase text-[var(--text-sec)]">PDF</button>
                                     </div>
                                 </div>
 
-                                {/* Results Panel */}
-                                <div className="lg:col-span-2 space-y-6">
-                                    {/* Metric Grid */}
-                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                        {activeTab === 'vcpu' && (
-                                            <>
-                                                <MetricCard label="Total Capacity" value={vcpuResult.capacity.toFixed(1)} unit="GHz" icon="Zap" />
-                                                <MetricCard label="Observed Load" value={vcpuResult.observed.toFixed(1)} unit="GHz" icon="Activity" />
-                                                <MetricCard label="Headroom" value={vcpuResult.headroom.toFixed(1)} unit="GHz" icon="ArrowUpRight" />
-                                            </>
-                                        )}
-                                        {activeTab === 'pcpu' && (
-                                            <>
-                                                <MetricCard label="Logical Procs" value={pcpuResult.totalLogical} unit="Threads" icon="Cpu" />
-                                                <MetricCard label="Peak Power" value={pcpuResult.estPower?.toFixed(0) || 'N/A'} unit="Watts" icon="Zap" />
-                                                <MetricCard label="Used Capacity" value={pcpuResult.usedGhz.toFixed(1)} unit="GHz" icon="Activity" />
-                                            </>
-                                        )}
-                                        {activeTab === 'subnet' && (
-                                            <>
-                                                <MetricCard label="Usable Hosts" value={subnetResult?.hosts.toLocaleString() || '0'} unit="IPs" icon="Users" />
-                                                <MetricCard label="Network ID" value={subnetResult?.network || ''} unit="" icon="Globe" />
-                                                <MetricCard label="Mask" value={subnetResult?.mask || ''} unit="" icon="Shield" />
-                                            </>
-                                        )}
-                                        {activeTab === 'storage' && (
-                                            <>
-                                                <MetricCard label="Usable Cap" value={storageResult.usable.toFixed(2)} unit={storageInputs.unit} icon="Database" />
-                                                <MetricCard label="Free Space" value={storageResult.free.toFixed(2)} unit={storageInputs.unit} icon="ArrowDownRight" />
-                                                <MetricCard label="Net Available" value={storageResult.netAvail.toFixed(2)} unit={storageInputs.unit} icon="CheckCircle" />
-                                            </>
-                                        )}
-                                    </div>
+                                {/* Results */}
+                                <div className="grid grid-cols-2 gap-3.5 sm:grid-cols-4">
+                                    {activeTab === 'vcpu' && (
+                                        <>
+                                            <MetricCard label="Total Capacity" value={vResult.capacity.toLocaleString()} unit="GHz" />
+                                            <MetricCard label="Observed" value={vResult.observed.toLocaleString()} unit="GHz" />
+                                            <MetricCard label="Utilization %" value={vResult.utilization.toFixed(2)} unit="percent" status={vResult.status.cls} />
+                                            <MetricCard label="Headroom" value={vResult.headroom.toLocaleString()} unit="GHz" />
+                                        </>
+                                    )}
+                                    {activeTab === 'pcpu' && (
+                                        <>
+                                            <MetricCard label="Logical Procs" value={pResult.totalLogical} unit="Threads" />
+                                            <MetricCard label="Peak GHz" value={pResult.peakGhz.toFixed(1)} unit="GHz" />
+                                            <MetricCard label="Used GHz" value={pResult.usedGhz.toFixed(1)} unit="GHz" status={pResult.status.cls} />
+                                            <MetricCard label="Est Power" value={pResult.estPower ? pResult.estPower.toFixed(0) : 'N/A'} unit="Watts" />
+                                        </>
+                                    )}
+                                    {activeTab === 'subnet' && (
+                                        <>
+                                            <MetricCard label="Usable Hosts" value={snResult?.hosts.toLocaleString() || '0'} unit="IPs" />
+                                            <MetricCard label="Network ID" value={snResult?.network || ''} unit="" />
+                                            <MetricCard label="Mask" value={snResult?.mask || ''} unit="" />
+                                            <MetricCard label="CIDR" value={snResult?.cidr || ''} unit="" />
+                                        </>
+                                    )}
+                                    {activeTab === 'storage' && (
+                                        <>
+                                            <MetricCard label="Usable Cap" value={stResult.usable.toFixed(2)} unit={stUnit} />
+                                            <MetricCard label="Used Space" value={stResult.used.toFixed(2)} unit={stUnit} status={stResult.status.cls} />
+                                            <MetricCard label="Free Space" value={stResult.free.toFixed(2)} unit={stUnit} />
+                                            <MetricCard label="Net Avail" value={stResult.netAvail.toFixed(2)} unit={stUnit} />
+                                        </>
+                                    )}
+                                </div>
 
-                                    {/* Visualizations */}
-                                    <div className="prtg-card p-6">
-                                        <h3 className="text-lg font-bold mb-6">Utilization Analysis</h3>
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                            <div className="space-y-6">
-                                                {activeTab === 'vcpu' && <ProgressBar value={vcpuResult.utilization} label="vCPU Utilization" statusCls={vcpuResult.status.cls} />}
-                                                {activeTab === 'pcpu' && <ProgressBar value={pcpuResult.utilization} label="pCPU Utilization" statusCls={pcpuResult.status.cls} />}
-                                                {activeTab === 'storage' && <ProgressBar value={storageResult.utilization} label="Storage Utilization" statusCls={storageResult.status.cls} />}
-                                                
-                                                <div className="pt-4 border-t border-gray-100">
-                                                    <h4 className="text-xs font-bold uppercase text-secondary mb-3">Resource Breakdown</h4>
-                                                    <div className="space-y-2">
-                                                        {activeTab === 'vcpu' && (
-                                                            <div className="flex justify-between text-sm">
-                                                                <span className="text-secondary">Available Headroom</span>
-                                                                <span className="font-bold text-green-500">{vcpuResult.headroom.toFixed(1)} GHz</span>
-                                                            </div>
-                                                        )}
-                                                        {activeTab === 'subnet' && (
-                                                            <>
-                                                                <div className="flex justify-between text-sm">
-                                                                    <span className="text-secondary">Range</span>
-                                                                    <span className="font-bold">{subnetResult?.range}</span>
-                                                                </div>
-                                                                <div className="flex justify-between text-sm">
-                                                                    <span className="text-secondary">Broadcast</span>
-                                                                    <span className="font-bold">{subnetResult?.broadcast}</span>
-                                                                </div>
-                                                            </>
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            </div>
+                                {activeTab !== 'subnet' && (
+                                    <ProgressBar 
+                                        title="Utilization vs Capacity" 
+                                        pct={activeTab === 'vcpu' ? vResult.utilization : activeTab === 'pcpu' ? pResult.utilization : stResult.utilization} 
+                                        status={activeTab === 'vcpu' ? vResult.status.cls : activeTab === 'pcpu' ? pResult.status.cls : stResult.status.cls} 
+                                        thresholds={['0%', 'Normal ≤80%', 'High ≤100%', '↑ Over']} 
+                                    />
+                                )}
 
-                                            <div className="h-48">
-                                                <ResponsiveContainer width="100%" height="100%">
-                                                    <PieChart>
-                                                        <Pie
-                                                            data={
-                                                                activeTab === 'vcpu' ? [
-                                                                    { name: 'Used', value: vcpuResult.observed },
-                                                                    { name: 'Free', value: vcpuResult.headroom }
-                                                                ] : activeTab === 'pcpu' ? [
-                                                                    { name: 'Used', value: pcpuResult.usedGhz },
-                                                                    { name: 'Free', value: pcpuResult.peakGhz - pcpuResult.usedGhz }
-                                                                ] : activeTab === 'storage' ? [
-                                                                    { name: 'Used', value: storageResult.used },
-                                                                    { name: 'Free', value: storageResult.free }
-                                                                ] : [
-                                                                    { name: 'Network', value: 1 },
-                                                                    { name: 'Hosts', value: subnetResult?.hosts || 0 },
-                                                                    { name: 'Broadcast', value: 1 }
-                                                                ]
-                                                            }
-                                                            cx="50%" cy="50%" innerRadius={40} outerRadius={60} paddingAngle={5} dataKey="value"
-                                                        >
-                                                            <Cell fill="var(--accent-color)" />
-                                                            <Cell fill="var(--border-color)" />
-                                                            {activeTab === 'subnet' && <Cell fill="var(--status-hi)" />}
-                                                        </Pie>
-                                                        <Tooltip />
-                                                    </PieChart>
-                                                </ResponsiveContainer>
-                                            </div>
+                                <div className="flex flex-wrap items-center gap-4 rounded-[var(--r)] border border-[var(--border)] bg-[var(--bg-card)] px-5 py-4.5 shadow-[var(--shadow)]">
+                                    {activeTab === 'vcpu' && <StatusBadge status={vResult.status} />}
+                                    {activeTab === 'pcpu' && <StatusBadge status={pResult.status} />}
+                                    {activeTab === 'storage' && <StatusBadge status={stResult.status} />}
+                                    <p className="flex-1 text-[0.82rem] leading-relaxed text-[var(--text-sec)]">
+                                        {activeTab === 'vcpu' && vResult.status.msg}
+                                        {activeTab === 'pcpu' && pResult.status.msg}
+                                        {activeTab === 'storage' && stResult.status.msg}
+                                        {activeTab === 'subnet' && `Network: ${snResult?.network} | Broadcast: ${snResult?.broadcast} | Class: ${snResult?.ipClass}`}
+                                    </p>
+                                </div>
+
+                                {/* Charts */}
+                                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                                    <div className="rounded-[var(--r)] border border-[var(--border)] bg-[var(--bg-card)] p-6 shadow-[var(--shadow)]">
+                                        <div className="mb-6 font-mono text-[11px] font-bold tracking-[0.15em] uppercase text-[var(--text-sec)]">Capacity Breakdown</div>
+                                        <div className="h-[240px] w-full">
+                                            <ResponsiveContainer width="100%" height="100%">
+                                                <BarChart layout="vertical" data={
+                                                    activeTab === 'vcpu' ? [{ name: 'CPU', used: vResult.observed, headroom: Math.max(0, vResult.headroom) }] :
+                                                    activeTab === 'pcpu' ? [{ name: 'CPU', used: pResult.usedGhz, headroom: Math.max(0, pResult.peakGhz - pResult.usedGhz) }] :
+                                                    activeTab === 'storage' ? [{ name: 'Storage', used: stResult.used, headroom: Math.max(0, stResult.usable - stResult.used) }] :
+                                                    [{ name: 'Hosts', used: snResult?.hosts || 0, headroom: 0 }]
+                                                }>
+                                                    <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="var(--border)" opacity={0.4} />
+                                                    <XAxis type="number" fontSize={10} fontFamily="JetBrains Mono" stroke="var(--text-sec)" />
+                                                    <YAxis type="category" dataKey="name" hide />
+                                                    <Tooltip />
+                                                    <Bar dataKey="used" name="Used" stackId="a" fill="url(#prtgGreen)" filter="url(#prtgBevel)" radius={[2, 0, 0, 2]} barSize={32} />
+                                                    <Bar dataKey="headroom" name="Free" stackId="a" fill="url(#prtgGray)" filter="url(#prtgShadow)" radius={[0, 2, 2, 0]} barSize={32} />
+                                                </BarChart>
+                                            </ResponsiveContainer>
                                         </div>
                                     </div>
-
-                                    {/* History Table */}
-                                    <div className="prtg-card overflow-hidden">
-                                        <div className="p-4 border-b border-gray-200 flex items-center justify-between">
-                                            <h3 className="text-sm font-bold uppercase">Recent Calculations</h3>
-                                            <button onClick={() => setHistory([])} className="text-xs font-bold text-red-500 hover:underline">Clear History</button>
-                                        </div>
-                                        <div className="overflow-x-auto">
-                                            <table className="w-full text-left text-sm">
-                                                <thead className="bg-gray-50 text-secondary text-xs uppercase">
-                                                    <tr>
-                                                        <th className="px-4 py-2">Time</th>
-                                                        <th className="px-4 py-2">Type</th>
-                                                        <th className="px-4 py-2">Main Metric</th>
-                                                        <th className="px-4 py-2">Status</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody className="divide-y divide-gray-100">
-                                                    {history.filter(h => h.type === activeTab).map(h => (
-                                                        <tr key={h.id} className="hover:bg-gray-50 transition-colors">
-                                                            <td className="px-4 py-3 text-secondary">{h.timestamp}</td>
-                                                            <td className="px-4 py-3 font-bold uppercase">{h.type}</td>
-                                                            <td className="px-4 py-3">
-                                                                {h.type === 'vcpu' && `${h.data.utilization.toFixed(1)}% Util`}
-                                                                {h.type === 'pcpu' && `${h.data.utilization.toFixed(1)}% Util`}
-                                                                {h.type === 'subnet' && `${h.data.hosts.toLocaleString()} Hosts`}
-                                                                {h.type === 'storage' && `${h.data.utilization.toFixed(1)}% Util`}
-                                                            </td>
-                                                            <td className="px-4 py-3">
-                                                                {h.data.status ? (
-                                                                    <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
-                                                                        h.data.status.cls === 'ok' ? 'bg-green-100 text-green-700' :
-                                                                        h.data.status.cls === 'hi' ? 'bg-amber-100 text-amber-700' :
-                                                                        'bg-red-100 text-red-700'
-                                                                    }`}>
-                                                                        {h.data.status.label}
-                                                                    </span>
-                                                                ) : '-'}
-                                                            </td>
-                                                        </tr>
-                                                    ))}
-                                                    {history.filter(h => h.type === activeTab).length === 0 && (
-                                                        <tr>
-                                                            <td colSpan="4" className="px-4 py-8 text-center text-secondary italic">No history for this tab yet.</td>
-                                                        </tr>
-                                                    )}
-                                                </tbody>
-                                            </table>
+                                    <div className="rounded-[var(--r)] border border-[var(--border)] bg-[var(--bg-card)] p-6 shadow-[var(--shadow)]">
+                                        <div className="mb-6 font-mono text-[11px] font-bold tracking-[0.15em] uppercase text-[var(--text-sec)]">Utilization Share</div>
+                                        <div className="h-[240px] w-full">
+                                            <ResponsiveContainer width="100%" height="100%">
+                                                <PieChart>
+                                                    <Pie
+                                                        data={
+                                                            activeTab === 'vcpu' ? [{ name: 'Used', value: vResult.observed }, { name: 'Free', value: Math.max(0, vResult.headroom) }] :
+                                                            activeTab === 'pcpu' ? [{ name: 'Used', value: pResult.usedGhz }, { name: 'Free', value: Math.max(0, pResult.peakGhz - pResult.usedGhz) }] :
+                                                            activeTab === 'storage' ? [{ name: 'Used', value: stResult.used }, { name: 'Free', value: Math.max(0, stResult.usable - stResult.used) }] :
+                                                            [{ name: 'Hosts', value: snResult?.hosts || 1 }]
+                                                        }
+                                                        cx="50%" cy="50%" innerRadius={60} outerRadius={85} paddingAngle={3} dataKey="value" stroke="var(--bg-card)" strokeWidth={2}
+                                                    >
+                                                        <Cell fill="url(#prtgGreen)" filter="url(#prtgBevel)" />
+                                                        <Cell fill="url(#prtgGray)" filter="url(#prtgShadow)" />
+                                                    </Pie>
+                                                    <Tooltip />
+                                                </PieChart>
+                                            </ResponsiveContainer>
                                         </div>
                                     </div>
                                 </div>
@@ -1038,44 +827,19 @@
                     </main>
 
                     {/* Footer */}
-                    <footer className="bg-secondary border-t border-gray-200 px-6 py-4 flex items-center justify-between text-xs text-secondary">
-                        <div className="flex items-center gap-4">
-                            <span>&copy; 2024 Infrastructure Calculator</span>
-                            <div className="w-1 h-1 bg-gray-300 rounded-full" />
-                            <span>v2.1.0 Standalone</span>
-                        </div>
+                    <footer className="mt-auto bg-[var(--bg-card)] border-t border-[var(--border)] px-7 py-4 flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-[var(--text-sec)]">
+                        <div>&copy; 2024 SABA IT Infrastructure Capacity Tools</div>
                         <div className="flex items-center gap-2">
-                            <div className="w-2 h-2 rounded-full bg-green-500" />
-                            <span>All Systems Operational</span>
+                            <div className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.4)]" />
+                            <span>System Ready</span>
                         </div>
                     </footer>
                 </div>
             );
         };
 
-                const root = ReactDOM.createRoot(document.getElementById('root'));
-                root.render(<App />);
-            } catch (err) {
-                console.error("Initialization error:", err);
-                throw err;
-            }
-        };
-
-        try {
-            init();
-        } catch (e) {
-            console.error("Critical initialization error:", e);
-            document.getElementById('root').innerHTML = `
-                <div class="flex items-center justify-center min-h-screen font-sans text-red-500 p-8">
-                    <div class="max-w-md text-center">
-                        <h1 class="text-2xl font-bold mb-4">Initialization Failed</h1>
-                        <p class="mb-4">The application failed to start. This is usually due to a script loading error or a browser compatibility issue.</p>
-                        <pre class="bg-gray-100 p-4 rounded text-left text-xs overflow-auto max-h-40">${e.message}</pre>
-                        <button onclick="window.location.reload()" class="mt-6 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Retry</button>
-                    </div>
-                </div>
-            `;
-        }
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
     </script>
 </body>
 </html>
