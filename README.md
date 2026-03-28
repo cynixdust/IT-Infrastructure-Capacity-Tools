@@ -76,6 +76,13 @@ If you don't want to deal with build processes or Node.js on the server:
 2. Rename it to `index.html`.
 3. Access it via `http://localhost/infra-tools`.
 
+### 7. Troubleshooting (White Page)
+If you see a **white page** after deploying to XAMPP:
+1. **Check the Console**: Press `F12` and check for `404 Not Found` errors for JS/CSS files.
+2. **Base Path**: Ensure you have rebuilt the app with `base: './'` in `vite.config.ts` (this is now the default in this project).
+3. **Rebuild**: Run `npm run build` again and copy the *new* contents of the `dist` folder to `htdocs/infra-tools`.
+4. **Browser Cache**: Try clearing your browser cache or opening in Incognito mode.
+
 ---
 
 ## IIS Deployment Guide (Step-by-Step)
