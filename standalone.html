@@ -13,7 +13,7 @@
     
     <!-- Icons & Charts -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://unpkg.com/recharts/umd/Recharts.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/recharts@2.12.2/umd/Recharts.min.js"></script>
     
     <!-- Animations -->
     <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
@@ -44,16 +44,12 @@
             --ov-bg: #ffebee;
             --gauge: #e0e0e0;
             --shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
-            
-            /* PRTG Specific Colors */
             --prtg-green: #00b050;
             --prtg-yellow: #ffc000;
             --prtg-red: #ff0000;
             --prtg-blue: #00b0f0;
             --prtg-gray: #a6a6a6;
-            --prtg-bg: #f3f3f3;
-            
-            --r: 8px;
+            --r: 4px;
         }
 
         .theme-dark {
@@ -76,73 +72,13 @@
             --shadow: 0 2px 24px rgba(0, 0, 0, 0.35);
         }
 
-        .theme-slate {
-            --bg: #0f172a;
-            --bg-card: #1e293b;
-            --bg-input: #334155;
-            --border: #475569;
-            --text-primary: #f8fafc;
-            --text-sec: #94a3b8;
-            --text-mono: #cbd5e1;
-            --accent: #38bdf8;
-            --accent-dim: rgba(56, 189, 248, 0.15);
-            --ok: #10b981;
-            --ok-bg: rgba(16, 185, 129, 0.12);
-            --hi: #f59e0b;
-            --hi-bg: rgba(245, 158, 11, 0.12);
-            --ov: #ef4444;
-            --ov-bg: rgba(239, 68, 68, 0.12);
-            --gauge: #334155;
-            --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-        }
-
-        .theme-emerald {
-            --bg: #064e3b;
-            --bg-card: #065f46;
-            --bg-input: #047857;
-            --border: #059669;
-            --text-primary: #ecfdf5;
-            --text-sec: #a7f3d0;
-            --text-mono: #d1fae5;
-            --accent: #34d399;
-            --accent-dim: rgba(52, 211, 153, 0.2);
-            --ok: #10b981;
-            --ok-bg: rgba(16, 185, 129, 0.15);
-            --hi: #fbbf24;
-            --hi-bg: rgba(251, 191, 36, 0.15);
-            --ov: #f87171;
-            --ov-bg: rgba(248, 113, 113, 0.15);
-            --gauge: #065f46;
-            --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-        }
-
-        .theme-amber {
-            --bg: #451a03;
-            --bg-card: #78350f;
-            --bg-input: #92400e;
-            --border: #b45309;
-            --text-primary: #fffbeb;
-            --text-sec: #fde68a;
-            --text-mono: #fef3c7;
-            --accent: #fbbf24;
-            --accent-dim: rgba(251, 191, 36, 0.2);
-            --ok: #10b981;
-            --ok-bg: rgba(16, 185, 129, 0.15);
-            --hi: #f59e0b;
-            --hi-bg: rgba(245, 158, 11, 0.15);
-            --ov: #ef4444;
-            --ov-bg: rgba(239, 68, 68, 0.15);
-            --gauge: #78350f;
-            --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-        }
-
         body {
             background-color: var(--bg);
             color: var(--text-primary);
             font-family: 'Inter', sans-serif;
-            transition: background-color 0.25s ease, color 0.25s ease;
             margin: 0;
             padding: 0;
+            transition: background-color 0.25s ease;
         }
 
         .font-mono { font-family: 'JetBrains Mono', monospace; }
@@ -153,73 +89,39 @@
         ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--text-sec); }
 
-        /* PRTG Glossy Effect */
-        .prtg-gloss {
-            position: relative;
-            overflow: hidden;
-        }
-        .prtg-gloss::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 50%;
-            background: linear-gradient(to bottom, rgba(255,255,255,0.3), rgba(255,255,255,0.05));
-            pointer-events: none;
-        }
-
-        /* Animations */
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .animate-in { animation: fadeIn 0.4s ease-out forwards; }
     </style>
 </head>
 <body>
-    <div id="root"></div>
+    <div id="root">
+        <div class="flex items-center justify-center min-h-screen font-sans text-gray-500">
+            <div class="text-center">
+                <div class="inline-block w-8 h-8 border-4 border-green-600 border-t-transparent rounded-full animate-spin mb-4"></div>
+                <p>Initializing SABA Capacity Tools...</p>
+            </div>
+        </div>
+    </div>
 
     <!-- Global SVG Definitions for PRTG-style 3D Effects -->
     <svg width="0" height="0" style="position: absolute;">
       <defs>
         <linearGradient id="prtgGreen" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#26e686" />
-          <stop offset="48%" stop-color="#00b050" />
-          <stop offset="50%" stop-color="#009a46" />
-          <stop offset="100%" stop-color="#00803a" />
+          <stop offset="0%" stop-color="#26e686" /><stop offset="48%" stop-color="#00b050" /><stop offset="50%" stop-color="#009a46" /><stop offset="100%" stop-color="#00803a" />
         </linearGradient>
         <linearGradient id="prtgOrange" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#ffdb4d" />
-          <stop offset="48%" stop-color="#ffc000" />
-          <stop offset="50%" stop-color="#e6ac00" />
-          <stop offset="100%" stop-color="#cc9900" />
+          <stop offset="0%" stop-color="#ffdb4d" /><stop offset="48%" stop-color="#ffc000" /><stop offset="50%" stop-color="#e6ac00" /><stop offset="100%" stop-color="#cc9900" />
         </linearGradient>
         <linearGradient id="prtgRed" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#ff4d4d" />
-          <stop offset="48%" stop-color="#ff0000" />
-          <stop offset="50%" stop-color="#e60000" />
-          <stop offset="100%" stop-color="#cc0000" />
-        </linearGradient>
-        <linearGradient id="prtgBlue" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#4dd2ff" />
-          <stop offset="48%" stop-color="#00b0f0" />
-          <stop offset="50%" stop-color="#009ed8" />
-          <stop offset="100%" stop-color="#008bc0" />
+          <stop offset="0%" stop-color="#ff4d4d" /><stop offset="48%" stop-color="#ff0000" /><stop offset="50%" stop-color="#e60000" /><stop offset="100%" stop-color="#cc0000" />
         </linearGradient>
         <linearGradient id="prtgGray" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#f0f0f0" />
-          <stop offset="48%" stop-color="#d0d0d0" />
-          <stop offset="50%" stop-color="#b0b0b0" />
-          <stop offset="100%" stop-color="#909090" />
+          <stop offset="0%" stop-color="#f0f0f0" /><stop offset="48%" stop-color="#d0d0d0" /><stop offset="50%" stop-color="#b0b0b0" /><stop offset="100%" stop-color="#909090" />
         </linearGradient>
-        
-        <filter id="prtgShadow" x="-10%" y="-10%" width="120%" height="120%">
-          <feDropShadow dx="0" dy="1" stdDeviation="1" flood-opacity="0.3" />
-        </filter>
-        
+        <filter id="prtgShadow" x="-10%" y="-10%" width="120%" height="120%"><feDropShadow dx="0" dy="1" stdDeviation="1" flood-opacity="0.3" /></filter>
         <filter id="prtgBevel">
           <feGaussianBlur in="SourceAlpha" stdDeviation="0.5" result="blur" />
-          <feSpecularLighting in="blur" surfaceScale="2" specularConstant="1" specularExponent="20" lighting-color="#ffffff" result="specOut">
-            <fePointLight x="-5000" y="-10000" z="20000" />
-          </feSpecularLighting>
+          <feSpecularLighting in="blur" surfaceScale="2" specularConstant="1" specularExponent="20" lighting-color="#ffffff" result="specOut"><fePointLight x="-5000" y="-10000" z="20000" /></feSpecularLighting>
           <feComposite in="specOut" in2="SourceAlpha" operator="in" result="specOut" />
           <feComposite in="SourceGraphic" in2="specOut" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" result="litGraphic" />
         </filter>
@@ -228,24 +130,21 @@
 
     <script type="text/babel">
         const { useState, useEffect, useMemo } = React;
-        const { 
-            BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, 
-            ResponsiveContainer, PieChart, Pie, Cell, AreaChart, Area 
-        } = Recharts;
-        const { motion, AnimatePresence } = window.Motion || { motion: (props) => <div {...props} />, AnimatePresence: (props) => props.children };
+
+        // --- Safe Library Access ---
+        const getRecharts = () => window.Recharts || {};
+        const getMotion = () => window.Motion || window.framerMotion || { motion: (p) => <div {...p} />, AnimatePresence: (p) => p.children };
 
         // --- Utility Functions ---
-
         const cn = (...classes) => classes.filter(Boolean).join(' ');
 
         function calculateVcpu(vcpu, freq, util) {
             const capacity = vcpu * freq;
-            const utilization = (util / capacity) * 100;
+            const utilization = capacity > 0 ? (util / capacity) * 100 : 0;
             const headroom = capacity - util;
-            let status;
-            if (utilization <= 80) status = { cls: 'ok', label: 'Normal', msg: 'Workload is within allocated capacity.' };
-            else if (utilization <= 100) status = { cls: 'hi', label: 'High', msg: 'Utilization is elevated. Monitor closely.' };
-            else status = { cls: 'ov', label: 'Overutilized', msg: 'Workload demand exceeds allocated capacity — possible contention or overcommitment.' };
+            let status = utilization <= 80 ? { cls: 'ok', label: 'Normal', msg: 'Workload is within allocated capacity.' } :
+                         utilization <= 100 ? { cls: 'hi', label: 'High', msg: 'Utilization is elevated. Monitor closely.' } :
+                         { cls: 'ov', label: 'Overutilized', msg: 'Workload demand exceeds allocated capacity.' };
             return { capacity, observed: util, utilization, headroom, status };
         }
 
@@ -255,20 +154,16 @@
             const peakGhz = totalLogical * freq;
             const usedGhz = peakGhz * (utilPct / 100);
             const estPower = tdp ? sockets * tdp * (utilPct / 100) : null;
-            let status;
-            if (utilPct <= 80) status = { cls: 'ok', label: 'Normal', msg: 'Workload is within allocated capacity.' };
-            else if (utilPct <= 100) status = { cls: 'hi', label: 'High', msg: 'Utilization is elevated. Monitor closely.' };
-            else status = { cls: 'ov', label: 'Overutilized', msg: 'Workload demand exceeds allocated capacity — possible contention or overcommitment.' };
+            let status = utilPct <= 80 ? { cls: 'ok', label: 'Normal', msg: 'Workload is within allocated capacity.' } :
+                         utilPct <= 100 ? { cls: 'hi', label: 'High', msg: 'Utilization is elevated. Monitor closely.' } :
+                         { cls: 'ov', label: 'Overutilized', msg: 'Workload demand exceeds allocated capacity.' };
             return { totalCores, totalLogical, peakGhz, usedGhz, utilization: utilPct, estPower, status };
         }
 
-        const ipToNum = (ip) => ip.split('.').reduce((a, o) => (a << 8) | +o, 0) >>> 0;
-        const numToIp = (n) => [(n >>> 24) & 255, (n >>> 16) & 255, (n >>> 8) & 255, n & 255].join('.');
-        const prefixToMask = (p) => p === 0 ? 0 : (0xFFFFFFFF << (32 - p)) >>> 0;
-
         function calculateSubnet(ipStr, maskStr) {
+            if (!ipStr || !maskStr) return null;
             const parseMask = (mk) => {
-                mk = mk.trim();
+                mk = String(mk).trim();
                 if (/^\/?\d{1,2}$/.test(mk)) {
                     const p = parseInt(mk.replace('/', ''));
                     return (p >= 0 && p <= 32) ? p : null;
@@ -277,80 +172,36 @@
                     const parts = mk.split('.').map(Number);
                     if (parts.some(p => p > 255)) return null;
                     const bin = parts.map(p => p.toString(2).padStart(8, '0')).join('');
-                    if (!/^1*0*$/.test(bin)) return null;
                     return bin.split('').filter(b => b === '1').length;
                 }
                 return null;
             };
             const prefix = parseMask(maskStr);
             if (prefix === null) return null;
-            const maskNum = prefixToMask(prefix);
+            const ipToNum = (ip) => ip.split('.').reduce((a, o) => (a << 8) | +o, 0) >>> 0;
+            const numToIp = (n) => [(n >>> 24) & 255, (n >>> 16) & 255, (n >>> 8) & 255, n & 255].join('.');
+            const maskNum = prefix === 0 ? 0 : (0xFFFFFFFF << (32 - prefix)) >>> 0;
             const ipNum = ipToNum(ipStr);
             const networkNum = ipNum & maskNum;
             const broadcastNum = networkNum | (~maskNum >>> 0);
-            const firstHost = prefix < 31 ? networkNum + 1 : networkNum;
-            const lastHost = prefix < 31 ? broadcastNum - 1 : broadcastNum;
-            const totalHosts = Math.pow(2, 32 - prefix);
-            const usableHosts = prefix <= 30 ? totalHosts - 2 : prefix === 31 ? 2 : 1;
-            const wildcardNum = ~maskNum >>> 0;
-            const binMask = maskNum.toString(2).padStart(32, '0').match(/.{8}/g).join('.');
-            const getIpClass = (first) => {
-                if (first < 128) return 'A';
-                if (first < 192) return 'B';
-                if (first < 224) return 'C';
-                if (first < 240) return 'D (Multicast)';
-                return 'E (Reserved)';
-            };
-            const getIpType = (ip) => {
-                const [a, b] = ip.split('.').map(Number);
-                if (a === 10) return 'Private (RFC1918)';
-                if (a === 172 && b >= 16 && b <= 31) return 'Private (RFC1918)';
-                if (a === 192 && b === 168) return 'Private (RFC1918)';
-                if (a === 127) return 'Loopback';
-                if (a === 169 && b === 254) return 'Link-Local (APIPA)';
-                if (a >= 224 && a <= 239) return 'Multicast';
-                return 'Public';
-            };
-            const splits = [];
-            const splitPrefix = Math.max(prefix, 24);
-            const splitCount = Math.pow(2, splitPrefix - prefix);
-            const blockSize = Math.pow(2, 32 - splitPrefix);
-            const rows = Math.min(splitCount, 64);
-            for (let i = 0; i < rows; i++) {
-                const netN = networkNum + i * blockSize;
-                const bcN = netN + blockSize - 1;
-                const fh = splitPrefix < 31 ? netN + 1 : netN;
-                const lh = splitPrefix < 31 ? bcN - 1 : bcN;
-                const h = splitPrefix <= 30 ? blockSize - 2 : blockSize;
-                splits.push({
-                    cidr: `/${splitPrefix}`,
-                    hosts: h,
-                    network: numToIp(netN),
-                    broadcast: numToIp(bcN),
-                    firstHost: numToIp(fh),
-                    lastHost: numToIp(lh)
-                });
-            }
+            const usableHosts = prefix <= 30 ? Math.pow(2, 32 - prefix) - 2 : prefix === 31 ? 2 : 1;
             return {
                 network: numToIp(networkNum),
                 broadcast: numToIp(broadcastNum),
                 mask: numToIp(maskNum),
-                wildcard: numToIp(wildcardNum),
                 cidr: `/${prefix}`,
-                range: `${numToIp(firstHost)} — ${numToIp(lastHost)}`,
+                range: `${numToIp(prefix < 31 ? networkNum + 1 : networkNum)} — ${numToIp(prefix < 31 ? broadcastNum - 1 : broadcastNum)}`,
                 hosts: usableHosts,
-                ipClass: getIpClass(+ipStr.split('.')[0]),
-                binMask,
-                ipType: getIpType(ipStr),
-                splits
+                ipClass: ipStr.split('.')[0] < 128 ? 'A' : ipStr.split('.')[0] < 192 ? 'B' : 'C',
+                ipType: ipStr.startsWith('10.') || ipStr.startsWith('192.168.') ? 'Private' : 'Public'
             };
         }
 
         function calculateStorage(drives, cap, raid, used, overhead, unit) {
             const factor = unit === 'GB' ? 1024 : 1;
-            const capTB = cap / factor;
-            const usedTB = used / factor;
-            const rawTB = drives * capTB;
+            const capTB = (cap || 0) / factor;
+            const usedTB = (used || 0) / factor;
+            const rawTB = (drives || 0) * capTB;
             const getRaidUsable = (raw, drives, raid) => {
                 switch (raid) {
                     case '0': return raw;
@@ -358,47 +209,26 @@
                     case '5': return raw * (drives - 1) / drives;
                     case '6': return raw * (drives - 2) / drives;
                     case '10': return raw / 2;
-                    case 'none': return raw;
                     default: return raw;
                 }
             };
             const usableTB = getRaidUsable(rawTB, drives, raid);
-            const netAvailTB = usableTB * (1 - overhead / 100);
+            const netAvailTB = usableTB * (1 - (overhead || 0) / 100);
             const freeTB = Math.max(netAvailTB - usedTB, 0);
-            const utilization = (usedTB / netAvailTB) * 100;
-            let status;
-            if (utilization <= 70) status = { cls: 'ok', label: 'Normal', msg: 'Storage utilization is healthy with adequate headroom.' };
-            else if (utilization <= 85) status = { cls: 'hi', label: 'High', msg: 'Utilization is elevated. Plan for capacity expansion.' };
-            else status = { cls: 'ov', label: 'Critical', msg: 'Storage is critically full. Immediate expansion or cleanup required.' };
+            const utilization = netAvailTB > 0 ? (usedTB / netAvailTB) * 100 : 0;
+            let status = utilization <= 70 ? { cls: 'ok', label: 'Normal', msg: 'Storage utilization is healthy.' } :
+                         utilization <= 85 ? { cls: 'hi', label: 'High', msg: 'Utilization is elevated.' } :
+                         { cls: 'ov', label: 'Critical', msg: 'Storage is critically full.' };
             return { raw: rawTB * factor, usable: usableTB * factor, netAvail: netAvailTB * factor, used: usedTB * factor, free: freeTB * factor, utilization, status };
         }
 
         // --- UI Components ---
-
-        const Icon = ({ name, size = 16, className = "" }) => {
-            const LucideIcon = lucide[name];
-            if (!LucideIcon) return null;
-            return <i data-lucide={name} className={className} style={{ width: size, height: size }}></i>;
-        };
-
-        useEffect(() => {
-            lucide.createIcons();
-        });
-
         const StatusBadge = ({ status }) => {
-            const colors = {
-                ok: 'bg-[#e8f5e9] text-[#00b050] border-[#00b050]/20',
-                hi: 'bg-[#fff9c4] text-[#f57f17] border-[#f57f17]/20',
-                ov: 'bg-[#ffebee] text-[#b71c1c] border-[#b71c1c]/20'
-            };
-            const dots = {
-                ok: 'bg-[#00b050] shadow-[0_0_8px_rgba(0,176,80,0.4)]',
-                hi: 'bg-[#ffc000] shadow-[0_0_8px_rgba(255,192,0,0.4)]',
-                ov: 'bg-[#ff0000] shadow-[0_0_8px_rgba(255,0,0,0.4)]'
-            };
+            if (!status) return null;
+            const colors = { ok: 'bg-[#e8f5e9] text-[#00b050] border-[#00b050]/20', hi: 'bg-[#fff9c4] text-[#f57f17] border-[#f57f17]/20', ov: 'bg-[#ffebee] text-[#b71c1c] border-[#b71c1c]/20' };
             return (
                 <div className={cn("inline-flex items-center gap-2 rounded-sm border px-3 py-1 font-sans text-[11px] font-bold uppercase tracking-wider", colors[status.cls])}>
-                    <div className={cn("h-2 w-2 rounded-full", dots[status.cls])} />
+                    <div className={cn("h-2 w-2 rounded-full", status.cls === 'ok' ? 'bg-[#00b050]' : status.cls === 'hi' ? 'bg-[#ffc000]' : 'bg-[#ff0000]')} />
                     {status.label}
                 </div>
             );
@@ -418,421 +248,153 @@
             );
         };
 
-        const ProgressBar = ({ title, pct, status, thresholds }) => {
+        const ProgressBar = ({ title, pct, status }) => {
+            const { motion } = getMotion();
             const barColor = status === 'ok' ? 'var(--prtg-green)' : status === 'hi' ? 'var(--prtg-yellow)' : 'var(--prtg-red)';
             return (
                 <div className="rounded-sm border border-[var(--border)] bg-[var(--bg-card)] p-6 shadow-sm">
                     <div className="mb-4 flex items-baseline justify-between">
                         <span className="font-sans text-[11px] font-bold tracking-[0.05em] uppercase text-[var(--text-sec)]">{title}</span>
-                        <span className="font-sans text-2xl font-bold text-[var(--text-primary)]">{pct.toFixed(3)}%</span>
+                        <span className="font-sans text-2xl font-bold text-[var(--text-primary)]">{(pct || 0).toFixed(3)}%</span>
                     </div>
                     <div className="relative h-5 w-full overflow-hidden rounded-sm bg-[#e0e0e0] border border-black/10 shadow-inner">
-                        <motion.div 
-                            initial={{ width: 0 }}
-                            animate={{ width: `${Math.min(pct, 100)}%` }}
-                            transition={{ duration: 1, ease: "easeOut" }}
-                            className="h-full relative"
-                            style={{ backgroundColor: barColor }}
-                        >
+                        <motion.div initial={{ width: 0 }} animate={{ width: `${Math.min(pct || 0, 100)}%` }} className="h-full relative" style={{ backgroundColor: barColor }}>
                             <div className="absolute inset-0 bg-gradient-to-b from-white/40 via-white/10 to-transparent h-[48%]" />
                             <div className="absolute inset-x-0 bottom-0 bg-black/5 h-[50%]" />
-                            <div className="absolute inset-0 flex">
-                                {Array.from({ length: 10 }).map((_, i) => (
-                                    <div key={i} className="h-full w-px bg-black/5 flex-1 border-r border-white/10" />
-                                ))}
-                            </div>
                         </motion.div>
                         <div className="absolute top-0 h-full w-px bg-red-500/30 z-10" style={{ left: '70%' }} />
                         <div className="absolute top-0 h-full w-px bg-red-600/40 z-10" style={{ left: '85%' }} />
                     </div>
-                    <div className="mt-3 flex justify-between px-1">
-                        <span className="font-sans text-[10px] text-[var(--text-sec)]">0%</span>
-                        <span className="font-sans text-[10px] text-[var(--text-sec)]">Warning 70%</span>
-                        <span className="font-sans text-[10px] text-[var(--text-sec)]">Critical 85%</span>
-                    </div>
+                    <div className="mt-3 flex justify-between px-1"><span className="font-sans text-[10px] text-[var(--text-sec)]">0%</span><span className="font-sans text-[10px] text-[var(--text-sec)]">Warning 70%</span><span className="font-sans text-[10px] text-[var(--text-sec)]">Critical 85%</span></div>
                 </div>
             );
         };
 
         // --- Main App Component ---
-
         const App = () => {
             const [activeTab, setActiveTab] = useState('vcpu');
             const [theme, setTheme] = useState(localStorage.getItem('prtg-theme') || 'light');
             const [logo, setLogo] = useState(localStorage.getItem('prtg-logo') || null);
-
-            // Inputs State
             const [vInput, setVInput] = useState({ vcpu: '72', freq: '3.2', util: '227.616' });
             const [pInput, setPInput] = useState({ sockets: '2', cores: '12', threads: '2', freq: '2.6', util: '45', tdp: '125' });
             const [snInput, setSnInput] = useState({ ip: '192.168.1.0', mask: '24' });
             const [stInput, setStInput] = useState({ drives: '12', cap: '1.2', raid: '10', used: '4.5', overhead: '15' });
             const [stUnit, setStUnit] = useState('TB');
+            const [vResult, setVResult] = useState(null);
+            const [pResult, setPResult] = useState(null);
+            const [snResult, setSnResult] = useState(null);
+            const [stResult, setStResult] = useState(null);
 
-            // Results State
-            const vResult = useMemo(() => calculateVcpu(parseFloat(vInput.vcpu), parseFloat(vInput.freq), parseFloat(vInput.util)), [vInput]);
-            const pResult = useMemo(() => calculatePcpu(parseFloat(pInput.sockets), parseFloat(pInput.cores), parseFloat(pInput.threads), parseFloat(pInput.freq), parseFloat(pInput.util), pInput.tdp ? parseFloat(pInput.tdp) : null), [pInput]);
-            const snResult = useMemo(() => calculateSubnet(snInput.ip, snInput.mask), [snInput]);
-            const stResult = useMemo(() => calculateStorage(parseFloat(stInput.drives), parseFloat(stInput.cap), stInput.raid, parseFloat(stInput.used), parseFloat(stInput.overhead), stUnit), [stInput, stUnit]);
+            const { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } = getRecharts();
+            const { motion, AnimatePresence } = getMotion();
 
-            const [history, setHistory] = useState(() => {
-                const saved = localStorage.getItem('prtg-history-v2');
-                return saved ? JSON.parse(saved) : [];
-            });
+            useEffect(() => { handleVcpuCalc(); handlePcpuCalc(); handleSubnetCalc(); handleStorageCalc(); }, []);
+            useEffect(() => { localStorage.setItem('prtg-theme', theme); document.documentElement.className = theme === 'light' ? '' : `theme-${theme}`; }, [theme]);
 
-            useEffect(() => {
-                localStorage.setItem('prtg-theme', theme);
-                document.documentElement.className = theme === 'light' ? '' : `theme-${theme}`;
-            }, [theme]);
-
-            useEffect(() => {
-                localStorage.setItem('prtg-history-v2', JSON.stringify(history));
-            }, [history]);
+            const handleVcpuCalc = () => setVResult(calculateVcpu(parseFloat(vInput.vcpu), parseFloat(vInput.freq), parseFloat(vInput.util)));
+            const handlePcpuCalc = () => setPResult(calculatePcpu(parseFloat(pInput.sockets), parseFloat(pInput.cores), parseFloat(pInput.threads), parseFloat(pInput.freq), parseFloat(pInput.util), pInput.tdp ? parseFloat(pInput.tdp) : null));
+            const handleSubnetCalc = () => setSnResult(calculateSubnet(snInput.ip, snInput.mask));
+            const handleStorageCalc = () => setStResult(calculateStorage(parseFloat(stInput.drives), parseFloat(stInput.cap), stInput.raid, parseFloat(stInput.used), parseFloat(stInput.overhead), stUnit));
 
             const handleLogoUpload = (e) => {
                 const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onloadend = () => {
-                        const base64 = reader.result;
-                        setLogo(base64);
-                        localStorage.setItem('prtg-logo', base64);
-                    };
-                    reader.readAsDataURL(file);
-                }
-            };
-
-            const addToHistory = (type, data) => {
-                const entry = { id: Date.now(), timestamp: new Date().toLocaleString(), type, data };
-                setHistory(prev => [entry, ...prev].slice(0, 50));
-            };
-
-            const exportToCSV = () => {
-                let csvContent = "data:text/csv;charset=utf-8,Timestamp,Type,Metric,Value\n";
-                history.forEach(h => {
-                    Object.entries(h.data).forEach(([k, v]) => {
-                        if (typeof v !== 'object') csvContent += `${h.timestamp},${h.type},${k},${v}\n`;
-                    });
-                });
-                const encodedUri = encodeURI(csvContent);
-                const link = document.createElement("a");
-                link.setAttribute("href", encodedUri);
-                link.setAttribute("download", "capacity_history.csv");
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            };
-
-            const exportToExcel = () => {
-                const wb = XLSX.utils.book_new();
-                const historyData = history.map(h => ({
-                    Timestamp: h.timestamp,
-                    Type: h.type.toUpperCase(),
-                    ...Object.fromEntries(Object.entries(h.data).filter(([_, v]) => typeof v !== 'object'))
-                }));
-                const ws = XLSX.utils.json_to_sheet(historyData);
-                XLSX.utils.book_append_sheet(wb, ws, "History");
-                XLSX.writeFile(wb, "Infrastructure_Report.xlsx");
-            };
-
-            const exportToPDF = () => {
-                const { jsPDF } = window.jspdf;
-                const doc = new jsPDF();
-                doc.setFontSize(18);
-                doc.text("Infrastructure Capacity Report", 14, 20);
-                doc.setFontSize(10);
-                doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 28);
-                
-                const data = history.map(h => [h.timestamp, h.type.toUpperCase(), JSON.stringify(h.data).substring(0, 50)]);
-                doc.autoTable({
-                    startY: 35,
-                    head: [['Timestamp', 'Type', 'Data Summary']],
-                    body: data,
-                });
-                doc.save("Infrastructure_Report.pdf");
+                if (file) { const reader = new FileReader(); reader.onloadend = () => { setLogo(reader.result); localStorage.setItem('prtg-logo', reader.result); }; reader.readAsDataURL(file); }
             };
 
             return (
                 <div className="min-h-screen flex flex-col">
-                    {/* Header */}
                     <header className="sticky top-0 z-50 flex items-center justify-between border-b border-[var(--border)] bg-[var(--bg-card)] px-7 py-3.5 backdrop-blur-md transition-all">
                         <div className="flex items-center gap-3">
                             <div className="relative h-10 w-10 shrink-0">
-                                {logo ? (
-                                    <img src={logo} alt="Logo" className="h-10 w-10 rounded-lg object-contain" />
-                                ) : (
-                                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[var(--accent)] text-xl font-extrabold text-white">⚙</div>
-                                )}
-                                <label className="absolute -right-1 -bottom-1 flex h-4.5 w-4.5 cursor-pointer items-center justify-center rounded-full border border-[var(--border)] bg-[var(--bg-card)] text-[10px] transition-colors hover:bg-[var(--accent-dim)]">
-                                    📁
-                                    <input type="file" className="hidden" accept="image/*" onChange={handleLogoUpload} />
-                                </label>
+                                {logo ? <img src={logo} alt="Logo" className="h-10 w-10 rounded-lg object-contain" /> : <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[var(--accent)] text-xl font-extrabold text-white">⚙</div>}
+                                <label className="absolute -right-1 -bottom-1 flex h-4.5 w-4.5 cursor-pointer items-center justify-center rounded-full border border-[var(--border)] bg-[var(--bg-card)] text-[10px] transition-colors hover:bg-[var(--accent-dim)]">📁<input type="file" className="hidden" accept="image/*" onChange={handleLogoUpload} /></label>
                             </div>
-                            <div>
-                                <div className="text-[0.98rem] font-extrabold tracking-tight text-[var(--text-primary)]">IT Infrastructure Capacity Tools</div>
-                                <div className="mt-0.5 font-mono text-[0.68rem] text-[var(--text-sec)]">infrastructure planning · v2.1 Standalone</div>
-                            </div>
+                            <div><div className="text-[0.98rem] font-extrabold tracking-tight text-[var(--text-primary)]">IT Infrastructure Capacity Tools</div><div className="mt-0.5 font-mono text-[0.68rem] text-[var(--text-sec)]">infrastructure planning · v2.1 Standalone</div></div>
                         </div>
-                        <div className="flex items-center gap-2">
-                            <div className="flex items-center gap-1 rounded-lg border border-[var(--border)] bg-[var(--bg-input)] p-1">
-                                {[
-                                    { id: 'light', color: '#ffffff', title: 'Light' },
-                                    { id: 'dark', color: '#1c1c1a', title: 'Dark' },
-                                    { id: 'slate', color: '#1e293b', title: 'Slate' },
-                                    { id: 'emerald', color: '#065f46', title: 'Emerald' },
-                                    { id: 'amber', color: '#78350f', title: 'Amber' },
-                                ].map((t) => (
-                                    <button
-                                        key={t.id}
-                                        onClick={() => setTheme(t.id)}
-                                        title={t.title}
-                                        className={cn(
-                                            "flex h-7 w-7 items-center justify-center rounded-md transition-all",
-                                            theme === t.id ? "bg-[var(--accent)] text-white shadow-sm" : "text-[var(--text-sec)] hover:bg-[var(--accent-dim)]"
-                                        )}
-                                        style={{ backgroundColor: theme === t.id ? undefined : t.color, border: '1px solid var(--border)' }}
-                                    />
-                                ))}
-                            </div>
+                        <div className="flex items-center gap-1 rounded-lg border border-[var(--border)] bg-[var(--bg-input)] p-1">
+                            {['light', 'dark'].map(t => (
+                                <button key={t} onClick={() => setTheme(t)} className={cn("px-3 py-1 text-[10px] font-bold uppercase rounded transition-all", theme === t ? "bg-[var(--accent)] text-white" : "text-[var(--text-sec)]")}>{t}</button>
+                            ))}
                         </div>
                     </header>
 
-                    {/* Navigation */}
                     <nav className="flex gap-0.5 overflow-x-auto border-b border-[var(--border)] bg-[var(--bg-card)] px-7 transition-all">
-                        {[
-                            { id: 'vcpu', label: 'vCPU Utilization' },
-                            { id: 'pcpu', label: 'Physical CPU' },
-                            { id: 'subnet', label: 'Subnet Calculator' },
-                            { id: 'storage', label: 'Storage Capacity' },
-                        ].map((tab) => (
-                            <button
-                                key={tab.id}
-                                onClick={() => setActiveTab(tab.id)}
-                                className={cn(
-                                    "flex shrink-0 items-center gap-2 border-b-[2.5px] px-5 py-3 text-[0.8rem] font-bold tracking-wide transition-all",
-                                    activeTab === tab.id ? "border-[var(--accent)] text-[var(--accent)]" : "border-transparent text-[var(--text-sec)] hover:text-[var(--text-primary)]"
-                                )}
-                            >
-                                {tab.label}
-                            </button>
+                        {['vcpu', 'pcpu', 'subnet', 'storage'].map((id) => (
+                            <button key={id} onClick={() => setActiveTab(id)} className={cn("flex shrink-0 items-center gap-2 border-b-[2.5px] px-5 py-3 text-[0.8rem] font-bold tracking-wide transition-all", activeTab === id ? "border-[var(--accent)] text-[var(--accent)]" : "border-transparent text-[var(--text-sec)] hover:text-[var(--text-primary)]")}>{id.toUpperCase()}</button>
                         ))}
                     </nav>
 
-                    {/* Main Content */}
                     <main className="mx-auto max-w-[960px] px-5 pt-8 pb-16 w-full">
                         <AnimatePresence mode="wait">
-                            <motion.div
-                                key={activeTab}
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -10 }}
-                                className="space-y-8"
-                            >
-                                {/* Inputs */}
+                            <motion.div key={activeTab} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-8">
                                 <div className="rounded-[var(--r)] border border-[var(--border)] bg-[var(--bg-card)] p-6 shadow-[var(--shadow)]">
                                     <div className="mb-4 font-mono text-[0.67rem] font-bold tracking-[0.12em] uppercase text-[var(--text-sec)]">Configuration Inputs</div>
-                                    
-                                    {activeTab === 'vcpu' && (
-                                        <div className="grid grid-cols-1 gap-4.5 sm:grid-cols-3">
-                                            <div className="flex flex-col gap-1.5">
-                                                <label className="text-[0.76rem] font-semibold text-[var(--text-sec)]">vCPUs Allocated</label>
-                                                <input type="number" value={vInput.vcpu} onChange={e => setVInput({...vInput, vcpu: e.target.value})} className="w-full rounded-lg border-[1.5px] border-[var(--border)] bg-[var(--bg-input)] px-3 py-2 font-mono" />
-                                            </div>
-                                            <div className="flex flex-col gap-1.5">
-                                                <label className="text-[0.76rem] font-semibold text-[var(--text-sec)]">Frequency (GHz)</label>
-                                                <input type="number" step="0.1" value={vInput.freq} onChange={e => setVInput({...vInput, freq: e.target.value})} className="w-full rounded-lg border-[1.5px] border-[var(--border)] bg-[var(--bg-input)] px-3 py-2 font-mono" />
-                                            </div>
-                                            <div className="flex flex-col gap-1.5">
-                                                <label className="text-[0.76rem] font-semibold text-[var(--text-sec)]">Observed Load (GHz)</label>
-                                                <input type="number" step="0.1" value={vInput.util} onChange={e => setVInput({...vInput, util: e.target.value})} className="w-full rounded-lg border-[1.5px] border-[var(--border)] bg-[var(--bg-input)] px-3 py-2 font-mono" />
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    {activeTab === 'pcpu' && (
-                                        <div className="grid grid-cols-1 gap-4.5 sm:grid-cols-3">
-                                            <div className="flex flex-col gap-1.5">
-                                                <label className="text-[0.76rem] font-semibold text-[var(--text-sec)]">Sockets</label>
-                                                <input type="number" value={pInput.sockets} onChange={e => setPInput({...pInput, sockets: e.target.value})} className="w-full rounded-lg border-[1.5px] border-[var(--border)] bg-[var(--bg-input)] px-3 py-2 font-mono" />
-                                            </div>
-                                            <div className="flex flex-col gap-1.5">
-                                                <label className="text-[0.76rem] font-semibold text-[var(--text-sec)]">Cores/Socket</label>
-                                                <input type="number" value={pInput.cores} onChange={e => setPInput({...pInput, cores: e.target.value})} className="w-full rounded-lg border-[1.5px] border-[var(--border)] bg-[var(--bg-input)] px-3 py-2 font-mono" />
-                                            </div>
-                                            <div className="flex flex-col gap-1.5">
-                                                <label className="text-[0.76rem] font-semibold text-[var(--text-sec)]">Threads/Core</label>
-                                                <input type="number" value={pInput.threads} onChange={e => setPInput({...pInput, threads: e.target.value})} className="w-full rounded-lg border-[1.5px] border-[var(--border)] bg-[var(--bg-input)] px-3 py-2 font-mono" />
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    {activeTab === 'subnet' && (
-                                        <div className="grid grid-cols-1 gap-4.5 sm:grid-cols-2">
-                                            <div className="flex flex-col gap-1.5">
-                                                <label className="text-[0.76rem] font-semibold text-[var(--text-sec)]">Base IP</label>
-                                                <input type="text" value={snInput.ip} onChange={e => setSnInput({...snInput, ip: e.target.value})} className="w-full rounded-lg border-[1.5px] border-[var(--border)] bg-[var(--bg-input)] px-3 py-2 font-mono" />
-                                            </div>
-                                            <div className="flex flex-col gap-1.5">
-                                                <label className="text-[0.76rem] font-semibold text-[var(--text-sec)]">Mask (CIDR or Dec)</label>
-                                                <input type="text" value={snInput.mask} onChange={e => setSnInput({...snInput, mask: e.target.value})} className="w-full rounded-lg border-[1.5px] border-[var(--border)] bg-[var(--bg-input)] px-3 py-2 font-mono" />
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    {activeTab === 'storage' && (
-                                        <div className="grid grid-cols-1 gap-4.5 sm:grid-cols-3">
-                                            <div className="flex flex-col gap-1.5">
-                                                <label className="text-[0.76rem] font-semibold text-[var(--text-sec)]">Drive Count</label>
-                                                <input type="number" value={stInput.drives} onChange={e => setStInput({...stInput, drives: e.target.value})} className="w-full rounded-lg border-[1.5px] border-[var(--border)] bg-[var(--bg-input)] px-3 py-2 font-mono" />
-                                            </div>
-                                            <div className="flex flex-col gap-1.5">
-                                                <label className="text-[0.76rem] font-semibold text-[var(--text-sec)]">Capacity</label>
-                                                <input type="number" step="0.1" value={stInput.cap} onChange={e => setStInput({...stInput, cap: e.target.value})} className="w-full rounded-lg border-[1.5px] border-[var(--border)] bg-[var(--bg-input)] px-3 py-2 font-mono" />
-                                            </div>
-                                            <div className="flex flex-col gap-1.5">
-                                                <label className="text-[0.76rem] font-semibold text-[var(--text-sec)]">RAID Level</label>
-                                                <select value={stInput.raid} onChange={e => setStInput({...stInput, raid: e.target.value})} className="w-full rounded-lg border-[1.5px] border-[var(--border)] bg-[var(--bg-input)] px-3 py-2 font-mono">
-                                                    <option value="0">RAID 0</option>
-                                                    <option value="1">RAID 1</option>
-                                                    <option value="5">RAID 5</option>
-                                                    <option value="6">RAID 6</option>
-                                                    <option value="10">RAID 10</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    )}
-
+                                    {activeTab === 'vcpu' && (<div className="grid grid-cols-1 gap-4.5 sm:grid-cols-3">
+                                        <div className="flex flex-col gap-1.5"><label className="text-[0.76rem] font-semibold text-[var(--text-sec)]">vCPUs Allocated</label><input type="number" value={vInput.vcpu} onChange={e => setVInput({...vInput, vcpu: e.target.value})} className="w-full rounded-lg border-[1.5px] border-[var(--border)] bg-[var(--bg-input)] px-3 py-2 font-mono" /></div>
+                                        <div className="flex flex-col gap-1.5"><label className="text-[0.76rem] font-semibold text-[var(--text-sec)]">Frequency (GHz)</label><input type="number" step="0.1" value={vInput.freq} onChange={e => setVInput({...vInput, freq: e.target.value})} className="w-full rounded-lg border-[1.5px] border-[var(--border)] bg-[var(--bg-input)] px-3 py-2 font-mono" /></div>
+                                        <div className="flex flex-col gap-1.5"><label className="text-[0.76rem] font-semibold text-[var(--text-sec)]">Observed Load (GHz)</label><input type="number" step="0.1" value={vInput.util} onChange={e => setVInput({...vInput, util: e.target.value})} className="w-full rounded-lg border-[1.5px] border-[var(--border)] bg-[var(--bg-input)] px-3 py-2 font-mono" /></div>
+                                    </div>)}
+                                    {activeTab === 'pcpu' && (<div className="grid grid-cols-1 gap-4.5 sm:grid-cols-3">
+                                        <div className="flex flex-col gap-1.5"><label className="text-[0.76rem] font-semibold text-[var(--text-sec)]">Sockets</label><input type="number" value={pInput.sockets} onChange={e => setPInput({...pInput, sockets: e.target.value})} className="w-full rounded-lg border-[1.5px] border-[var(--border)] bg-[var(--bg-input)] px-3 py-2 font-mono" /></div>
+                                        <div className="flex flex-col gap-1.5"><label className="text-[0.76rem] font-semibold text-[var(--text-sec)]">Cores/Socket</label><input type="number" value={pInput.cores} onChange={e => setPInput({...pInput, cores: e.target.value})} className="w-full rounded-lg border-[1.5px] border-[var(--border)] bg-[var(--bg-input)] px-3 py-2 font-mono" /></div>
+                                        <div className="flex flex-col gap-1.5"><label className="text-[0.76rem] font-semibold text-[var(--text-sec)]">Threads/Core</label><input type="number" value={pInput.threads} onChange={e => setPInput({...pInput, threads: e.target.value})} className="w-full rounded-lg border-[1.5px] border-[var(--border)] bg-[var(--bg-input)] px-3 py-2 font-mono" /></div>
+                                    </div>)}
+                                    {activeTab === 'subnet' && (<div className="grid grid-cols-1 gap-4.5 sm:grid-cols-2">
+                                        <div className="flex flex-col gap-1.5"><label className="text-[0.76rem] font-semibold text-[var(--text-sec)]">Base IP</label><input type="text" value={snInput.ip} onChange={e => setSnInput({...snInput, ip: e.target.value})} className="w-full rounded-lg border-[1.5px] border-[var(--border)] bg-[var(--bg-input)] px-3 py-2 font-mono" /></div>
+                                        <div className="flex flex-col gap-1.5"><label className="text-[0.76rem] font-semibold text-[var(--text-sec)]">Mask (CIDR or Dec)</label><input type="text" value={snInput.mask} onChange={e => setSnInput({...snInput, mask: e.target.value})} className="w-full rounded-lg border-[1.5px] border-[var(--border)] bg-[var(--bg-input)] px-3 py-2 font-mono" /></div>
+                                    </div>)}
+                                    {activeTab === 'storage' && (<div className="grid grid-cols-1 gap-4.5 sm:grid-cols-3">
+                                        <div className="flex flex-col gap-1.5"><label className="text-[0.76rem] font-semibold text-[var(--text-sec)]">Drive Count</label><input type="number" value={stInput.drives} onChange={e => setStInput({...stInput, drives: e.target.value})} className="w-full rounded-lg border-[1.5px] border-[var(--border)] bg-[var(--bg-input)] px-3 py-2 font-mono" /></div>
+                                        <div className="flex flex-col gap-1.5"><label className="text-[0.76rem] font-semibold text-[var(--text-sec)]">Capacity</label><input type="number" step="0.1" value={stInput.cap} onChange={e => setStInput({...stInput, cap: e.target.value})} className="w-full rounded-lg border-[1.5px] border-[var(--border)] bg-[var(--bg-input)] px-3 py-2 font-mono" /></div>
+                                        <div className="flex flex-col gap-1.5"><label className="text-[0.76rem] font-semibold text-[var(--text-sec)]">RAID Level</label><select value={stInput.raid} onChange={e => setStInput({...stInput, raid: e.target.value})} className="w-full rounded-lg border-[1.5px] border-[var(--border)] bg-[var(--bg-input)] px-3 py-2 font-mono"><option value="0">RAID 0</option><option value="1">RAID 1</option><option value="5">RAID 5</option><option value="6">RAID 6</option><option value="10">RAID 10</option></select></div>
+                                    </div>)}
                                     <div className="mt-6 flex gap-3">
-                                        <button 
-                                            onClick={() => {
-                                                if(activeTab === 'vcpu') addToHistory('vcpu', vResult);
-                                                if(activeTab === 'pcpu') addToHistory('pcpu', pResult);
-                                                if(activeTab === 'subnet') addToHistory('subnet', snResult);
-                                                if(activeTab === 'storage') addToHistory('storage', stResult);
-                                            }}
-                                            className="rounded-lg bg-[var(--accent)] px-6 py-2 text-sm font-bold text-white hover:opacity-90"
-                                        >
-                                            Save to History
-                                        </button>
-                                        <div className="flex-1" />
-                                        <button onClick={exportToCSV} className="px-4 py-2 border border-[var(--border)] rounded-lg text-xs font-bold uppercase text-[var(--text-sec)]">CSV</button>
-                                        <button onClick={exportToExcel} className="px-4 py-2 border border-[var(--border)] rounded-lg text-xs font-bold uppercase text-[var(--text-sec)]">XLS</button>
-                                        <button onClick={exportToPDF} className="px-4 py-2 border border-[var(--border)] rounded-lg text-xs font-bold uppercase text-[var(--text-sec)]">PDF</button>
+                                        <button onClick={() => { if(activeTab === 'vcpu') handleVcpuCalc(); if(activeTab === 'pcpu') handlePcpuCalc(); if(activeTab === 'subnet') handleSubnetCalc(); if(activeTab === 'storage') handleStorageCalc(); }} className="rounded bg-[var(--accent)] px-8 py-2.5 text-sm font-bold text-white hover:opacity-90 shadow-md">Calculate Now</button>
+                                        <button onClick={() => { if(activeTab === 'vcpu') setVInput({vcpu: '128', freq: '2.4', util: '150'}); if(activeTab === 'pcpu') setPInput({sockets: '2', cores: '16', threads: '2', freq: '2.9', util: '75', tdp: '205'}); if(activeTab === 'subnet') setSnInput({ip: '10.10.0.0', mask: '22'}); if(activeTab === 'storage') setStInput({drives: '24', cap: '4', raid: '6', used: '40', overhead: '10'}); }} className="px-4 py-2 text-xs font-bold text-[var(--accent)] border border-[var(--accent)] rounded hover:bg-[var(--accent-dim)]">Load Sample</button>
                                     </div>
                                 </div>
 
-                                {/* Results */}
-                                <div className="grid grid-cols-2 gap-3.5 sm:grid-cols-4">
-                                    {activeTab === 'vcpu' && (
-                                        <>
-                                            <MetricCard label="Total Capacity" value={vResult.capacity.toLocaleString()} unit="GHz" />
-                                            <MetricCard label="Observed" value={vResult.observed.toLocaleString()} unit="GHz" />
-                                            <MetricCard label="Utilization %" value={vResult.utilization.toFixed(2)} unit="percent" status={vResult.status.cls} />
-                                            <MetricCard label="Headroom" value={vResult.headroom.toLocaleString()} unit="GHz" />
-                                        </>
-                                    )}
-                                    {activeTab === 'pcpu' && (
-                                        <>
-                                            <MetricCard label="Logical Procs" value={pResult.totalLogical} unit="Threads" />
-                                            <MetricCard label="Peak GHz" value={pResult.peakGhz.toFixed(1)} unit="GHz" />
-                                            <MetricCard label="Used GHz" value={pResult.usedGhz.toFixed(1)} unit="GHz" status={pResult.status.cls} />
-                                            <MetricCard label="Est Power" value={pResult.estPower ? pResult.estPower.toFixed(0) : 'N/A'} unit="Watts" />
-                                        </>
-                                    )}
-                                    {activeTab === 'subnet' && (
-                                        <>
-                                            <MetricCard label="Usable Hosts" value={snResult?.hosts.toLocaleString() || '0'} unit="IPs" />
-                                            <MetricCard label="Network ID" value={snResult?.network || ''} unit="" />
-                                            <MetricCard label="Mask" value={snResult?.mask || ''} unit="" />
-                                            <MetricCard label="CIDR" value={snResult?.cidr || ''} unit="" />
-                                        </>
-                                    )}
-                                    {activeTab === 'storage' && (
-                                        <>
-                                            <MetricCard label="Usable Cap" value={stResult.usable.toFixed(2)} unit={stUnit} />
-                                            <MetricCard label="Used Space" value={stResult.used.toFixed(2)} unit={stUnit} status={stResult.status.cls} />
-                                            <MetricCard label="Free Space" value={stResult.free.toFixed(2)} unit={stUnit} />
-                                            <MetricCard label="Net Avail" value={stResult.netAvail.toFixed(2)} unit={stUnit} />
-                                        </>
-                                    )}
-                                </div>
-
-                                {activeTab !== 'subnet' && (
-                                    <ProgressBar 
-                                        title="Utilization vs Capacity" 
-                                        pct={activeTab === 'vcpu' ? vResult.utilization : activeTab === 'pcpu' ? pResult.utilization : stResult.utilization} 
-                                        status={activeTab === 'vcpu' ? vResult.status.cls : activeTab === 'pcpu' ? pResult.status.cls : stResult.status.cls} 
-                                        thresholds={['0%', 'Normal ≤80%', 'High ≤100%', '↑ Over']} 
-                                    />
+                                {((activeTab === 'vcpu' && vResult) || (activeTab === 'pcpu' && pResult) || (activeTab === 'subnet' && snResult) || (activeTab === 'storage' && stResult)) && (
+                                    <>
+                                        <div className="grid grid-cols-2 gap-3.5 sm:grid-cols-4">
+                                            {activeTab === 'vcpu' && vResult && (<><MetricCard label="Total Capacity" value={vResult.capacity.toLocaleString()} unit="GHz" /><MetricCard label="Observed" value={vResult.observed.toLocaleString()} unit="GHz" /><MetricCard label="Utilization %" value={vResult.utilization.toFixed(2)} unit="%" status={vResult.status.cls} /><MetricCard label="Headroom" value={vResult.headroom.toLocaleString()} unit="GHz" /></>)}
+                                            {activeTab === 'pcpu' && pResult && (<><MetricCard label="Logical Procs" value={pResult.totalLogical} unit="Threads" /><MetricCard label="Peak GHz" value={pResult.peakGhz.toFixed(1)} unit="GHz" /><MetricCard label="Used GHz" value={pResult.usedGhz.toFixed(1)} unit="GHz" status={pResult.status.cls} /><MetricCard label="Est Power" value={pResult.estPower ? pResult.estPower.toFixed(0) : 'N/A'} unit="Watts" /></>)}
+                                            {activeTab === 'subnet' && snResult && (<><MetricCard label="Usable Hosts" value={snResult.hosts.toLocaleString()} unit="IPs" /><MetricCard label="Network ID" value={snResult.network} unit="" /><MetricCard label="Mask" value={snResult.mask} unit="" /><MetricCard label="CIDR" value={snResult.cidr} unit="" /></>)}
+                                            {activeTab === 'storage' && stResult && (<><MetricCard label="Usable Cap" value={stResult.usable.toFixed(2)} unit={stUnit} /><MetricCard label="Used Space" value={stResult.used.toFixed(2)} unit={stUnit} status={stResult.status.cls} /><MetricCard label="Free Space" value={stResult.free.toFixed(2)} unit={stUnit} /><MetricCard label="Net Avail" value={stResult.netAvail.toFixed(2)} unit={stUnit} /></>)}
+                                        </div>
+                                        {activeTab !== 'subnet' && (<ProgressBar title="Utilization vs Capacity" pct={activeTab === 'vcpu' ? vResult.utilization : activeTab === 'pcpu' ? pResult.utilization : stResult.utilization} status={activeTab === 'vcpu' ? vResult.status.cls : activeTab === 'pcpu' ? pResult.status.cls : stResult.status.cls} />)}
+                                        {BarChart && (<div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                                            <div className="rounded-[var(--r)] border border-[var(--border)] bg-[var(--bg-card)] p-6 shadow-[var(--shadow)]">
+                                                <div className="mb-6 font-mono text-[11px] font-bold tracking-[0.15em] uppercase text-[var(--text-sec)]">Capacity Breakdown</div>
+                                                <div className="h-[240px] w-full">
+                                                    <ResponsiveContainer width="100%" height="100%">
+                                                        <BarChart layout="vertical" data={activeTab === 'vcpu' ? [{ name: 'CPU', used: vResult.observed, free: Math.max(0, vResult.headroom) }] : activeTab === 'pcpu' ? [{ name: 'CPU', used: pResult.usedGhz, free: Math.max(0, pResult.peakGhz - pResult.usedGhz) }] : activeTab === 'storage' ? [{ name: 'Storage', used: stResult.used, free: Math.max(0, stResult.usable - stResult.used) }] : [{ name: 'Hosts', used: snResult.hosts, free: 0 }]}>
+                                                            <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="var(--border)" opacity={0.4} /><XAxis type="number" fontSize={10} fontFamily="JetBrains Mono" stroke="var(--text-sec)" /><YAxis type="category" dataKey="name" hide /><Tooltip />
+                                                            <Bar dataKey="used" name="Used" stackId="a" fill="url(#prtgGreen)" filter="url(#prtgBevel)" radius={[2, 0, 0, 2]} barSize={32} /><Bar dataKey="free" name="Free" stackId="a" fill="url(#prtgGray)" filter="url(#prtgShadow)" radius={[0, 2, 2, 0]} barSize={32} />
+                                                        </BarChart>
+                                                    </ResponsiveContainer>
+                                                </div>
+                                            </div>
+                                            <div className="rounded-[var(--r)] border border-[var(--border)] bg-[var(--bg-card)] p-6 shadow-[var(--shadow)]">
+                                                <div className="mb-6 font-mono text-[11px] font-bold tracking-[0.15em] uppercase text-[var(--text-sec)]">Utilization Share</div>
+                                                <div className="h-[240px] w-full">
+                                                    <ResponsiveContainer width="100%" height="100%">
+                                                        <PieChart>
+                                                            <Pie data={activeTab === 'vcpu' ? [{ name: 'Used', value: vResult.observed }, { name: 'Free', value: Math.max(0, vResult.headroom) }] : activeTab === 'pcpu' ? [{ name: 'Used', value: pResult.usedGhz }, { name: 'Free', value: Math.max(0, pResult.peakGhz - pResult.usedGhz) }] : activeTab === 'storage' ? [{ name: 'Used', value: stResult.used }, { name: 'Free', value: Math.max(0, stResult.usable - stResult.used) }] : [{ name: 'Network', value: 1 }, { name: 'Hosts', value: snResult.hosts }]} cx="50%" cy="50%" innerRadius={60} outerRadius={85} paddingAngle={3} dataKey="value" stroke="var(--bg-card)" strokeWidth={2}>
+                                                                <Cell fill="url(#prtgGreen)" filter="url(#prtgBevel)" /><Cell fill="url(#prtgGray)" filter="url(#prtgShadow)" />
+                                                            </Pie><Tooltip />
+                                                        </PieChart>
+                                                    </ResponsiveContainer>
+                                                </div>
+                                            </div>
+                                        </div>)}
+                                    </>
                                 )}
-
-                                <div className="flex flex-wrap items-center gap-4 rounded-[var(--r)] border border-[var(--border)] bg-[var(--bg-card)] px-5 py-4.5 shadow-[var(--shadow)]">
-                                    {activeTab === 'vcpu' && <StatusBadge status={vResult.status} />}
-                                    {activeTab === 'pcpu' && <StatusBadge status={pResult.status} />}
-                                    {activeTab === 'storage' && <StatusBadge status={stResult.status} />}
-                                    <p className="flex-1 text-[0.82rem] leading-relaxed text-[var(--text-sec)]">
-                                        {activeTab === 'vcpu' && vResult.status.msg}
-                                        {activeTab === 'pcpu' && pResult.status.msg}
-                                        {activeTab === 'storage' && stResult.status.msg}
-                                        {activeTab === 'subnet' && `Network: ${snResult?.network} | Broadcast: ${snResult?.broadcast} | Class: ${snResult?.ipClass}`}
-                                    </p>
-                                </div>
-
-                                {/* Charts */}
-                                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-                                    <div className="rounded-[var(--r)] border border-[var(--border)] bg-[var(--bg-card)] p-6 shadow-[var(--shadow)]">
-                                        <div className="mb-6 font-mono text-[11px] font-bold tracking-[0.15em] uppercase text-[var(--text-sec)]">Capacity Breakdown</div>
-                                        <div className="h-[240px] w-full">
-                                            <ResponsiveContainer width="100%" height="100%">
-                                                <BarChart layout="vertical" data={
-                                                    activeTab === 'vcpu' ? [{ name: 'CPU', used: vResult.observed, headroom: Math.max(0, vResult.headroom) }] :
-                                                    activeTab === 'pcpu' ? [{ name: 'CPU', used: pResult.usedGhz, headroom: Math.max(0, pResult.peakGhz - pResult.usedGhz) }] :
-                                                    activeTab === 'storage' ? [{ name: 'Storage', used: stResult.used, headroom: Math.max(0, stResult.usable - stResult.used) }] :
-                                                    [{ name: 'Hosts', used: snResult?.hosts || 0, headroom: 0 }]
-                                                }>
-                                                    <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="var(--border)" opacity={0.4} />
-                                                    <XAxis type="number" fontSize={10} fontFamily="JetBrains Mono" stroke="var(--text-sec)" />
-                                                    <YAxis type="category" dataKey="name" hide />
-                                                    <Tooltip />
-                                                    <Bar dataKey="used" name="Used" stackId="a" fill="url(#prtgGreen)" filter="url(#prtgBevel)" radius={[2, 0, 0, 2]} barSize={32} />
-                                                    <Bar dataKey="headroom" name="Free" stackId="a" fill="url(#prtgGray)" filter="url(#prtgShadow)" radius={[0, 2, 2, 0]} barSize={32} />
-                                                </BarChart>
-                                            </ResponsiveContainer>
-                                        </div>
-                                    </div>
-                                    <div className="rounded-[var(--r)] border border-[var(--border)] bg-[var(--bg-card)] p-6 shadow-[var(--shadow)]">
-                                        <div className="mb-6 font-mono text-[11px] font-bold tracking-[0.15em] uppercase text-[var(--text-sec)]">Utilization Share</div>
-                                        <div className="h-[240px] w-full">
-                                            <ResponsiveContainer width="100%" height="100%">
-                                                <PieChart>
-                                                    <Pie
-                                                        data={
-                                                            activeTab === 'vcpu' ? [{ name: 'Used', value: vResult.observed }, { name: 'Free', value: Math.max(0, vResult.headroom) }] :
-                                                            activeTab === 'pcpu' ? [{ name: 'Used', value: pResult.usedGhz }, { name: 'Free', value: Math.max(0, pResult.peakGhz - pResult.usedGhz) }] :
-                                                            activeTab === 'storage' ? [{ name: 'Used', value: stResult.used }, { name: 'Free', value: Math.max(0, stResult.usable - stResult.used) }] :
-                                                            [{ name: 'Hosts', value: snResult?.hosts || 1 }]
-                                                        }
-                                                        cx="50%" cy="50%" innerRadius={60} outerRadius={85} paddingAngle={3} dataKey="value" stroke="var(--bg-card)" strokeWidth={2}
-                                                    >
-                                                        <Cell fill="url(#prtgGreen)" filter="url(#prtgBevel)" />
-                                                        <Cell fill="url(#prtgGray)" filter="url(#prtgShadow)" />
-                                                    </Pie>
-                                                    <Tooltip />
-                                                </PieChart>
-                                            </ResponsiveContainer>
-                                        </div>
-                                    </div>
-                                </div>
                             </motion.div>
                         </AnimatePresence>
                     </main>
-
-                    {/* Footer */}
                     <footer className="mt-auto bg-[var(--bg-card)] border-t border-[var(--border)] px-7 py-4 flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-[var(--text-sec)]">
-                        <div>&copy; 2024 SABA IT Infrastructure Capacity Tools</div>
-                        <div className="flex items-center gap-2">
-                            <div className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.4)]" />
-                            <span>System Ready</span>
-                        </div>
+                        <div>&copy; 2024 SABA IT Infrastructure Capacity Tools</div><div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.4)]" /><span>System Ready</span></div>
                     </footer>
                 </div>
             );
