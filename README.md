@@ -71,17 +71,20 @@ Open your browser and navigate to:
 `http://localhost/infra-tools`
 
 ### 6. Using the Standalone Version
-If you don't want to deal with build processes or Node.js on the server:
-1. Copy the `standalone.html` file from the project root to `C:\xampp\htdocs\infra-tools`.
-2. Rename it to `index.html`.
+The `standalone.html` file is a single-file version of the app that doesn't require a build process.
+1. Copy `standalone.html` to `C:\xampp\htdocs\infra-tools`.
+2. **CRITICAL:** Rename `standalone.html` to `index.html`.
 3. Access it via `http://localhost/infra-tools`.
+4. **Note:** This version requires an internet connection to load libraries from CDNs.
 
 ### 7. Troubleshooting (White Page)
 If you see a **white page** after deploying to XAMPP:
-1. **Check the Console**: Press `F12` and check for `404 Not Found` errors for JS/CSS files.
-2. **Base Path**: Ensure you have rebuilt the app with `base: './'` in `vite.config.ts` (this is now the default in this project).
-3. **Rebuild**: Run `npm run build` again and copy the *new* contents of the `dist` folder to `htdocs/infra-tools`.
-4. **Browser Cache**: Try clearing your browser cache or opening in Incognito mode.
+1. **Check the Folder:** Ensure you copied the **contents of the `dist` folder**, not the project root. The source `index.html` in the root will not work on XAMPP.
+2. **Check the URL:** If your app is at `http://localhost/infra-tools/`, make sure you set `base: './'` in `vite.config.ts` before building.
+3. **Check the Console:** Press `F12` and look at the "Console" tab. If you see "404 Not Found" for JS or CSS files, your paths are wrong.
+4. **Rebuild:** Run `npm run build` again and copy the *new* contents of the `dist` folder to `htdocs/infra-tools`.
+5. **Browser Cache:** Try clearing your browser cache or opening in Incognito mode.
+6. **Standalone Alternative:** If the build version continues to fail, try using `standalone.html` as your `index.html`. It's more resilient for simple deployments.
 
 ---
 
