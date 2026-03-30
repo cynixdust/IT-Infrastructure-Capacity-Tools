@@ -466,10 +466,10 @@ export default function App() {
           </div>
           <div>
             <div className="text-[0.98rem] font-extrabold tracking-tight text-[var(--text-primary)]">IT Infrastructure Capacity Tools</div>
-            <div className="mt-0.5 font-mono text-[0.68rem] text-[var(--text-sec)]">infrastructure planning · v2.0</div>
+            <div className="mt-0.5 font-mono text-[0.68rem] text-[var(--text-sec)]">infrastructure planning · v2.1 Standalone</div>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
           <div className="flex items-center gap-1 overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--bg-input)]">
             <button 
               onClick={exportCSV}
@@ -499,28 +499,25 @@ export default function App() {
             </button>
           </div>
           
-          <div className="flex items-center gap-1 rounded-lg border border-[var(--border)] bg-[var(--bg-input)] p-1">
-            {[
-              { id: 'light', icon: <Sun size={14} />, color: '#ffffff', title: 'Light' },
-              { id: 'dark', icon: <Moon size={14} />, color: '#1c1c1a', title: 'Dark' },
-              { id: 'slate', icon: <Palette size={14} />, color: '#1e293b', title: 'Slate' },
-              { id: 'emerald', icon: <Palette size={14} />, color: '#065f46', title: 'Emerald' },
-              { id: 'amber', icon: <Palette size={14} />, color: '#78350f', title: 'Amber' },
-            ].map((t) => (
-              <button
-                key={t.id}
-                onClick={() => setTheme(t.id as any)}
-                title={t.title}
-                className={cn(
-                  "flex h-7 w-7 items-center justify-center rounded-md transition-all",
-                  theme === t.id 
-                    ? "bg-[var(--accent)] text-white shadow-sm" 
-                    : "text-[var(--text-sec)] hover:bg-[var(--accent-dim)] hover:text-[var(--accent)]"
-                )}
-              >
-                {t.icon}
-              </button>
-            ))}
+          <div className="flex items-center overflow-hidden rounded-md border border-[var(--border)] bg-[var(--bg-input)]">
+            <button
+              onClick={() => setTheme('light')}
+              className={cn(
+                "px-4 py-1.5 text-[10px] font-bold tracking-wider uppercase transition-all",
+                theme === 'light' ? "bg-[var(--accent)] text-white" : "text-[var(--text-sec)] hover:bg-[var(--accent-dim)]"
+              )}
+            >
+              Light
+            </button>
+            <button
+              onClick={() => setTheme('dark')}
+              className={cn(
+                "px-4 py-1.5 text-[10px] font-bold tracking-wider uppercase transition-all",
+                theme === 'dark' ? "bg-[var(--accent)] text-white" : "text-[var(--text-sec)] hover:bg-[var(--accent-dim)]"
+              )}
+            >
+              Dark
+            </button>
           </div>
         </div>
       </header>
@@ -528,20 +525,19 @@ export default function App() {
       {/* Tabs */}
       <nav className="flex gap-0.5 overflow-x-auto border-b border-[var(--border)] bg-[var(--bg-card)] px-7 transition-all">
         {[
-          { id: 'vcpu', label: 'vCPU Utilization', icon: <Monitor size={14} /> },
-          { id: 'pcpu', label: 'Physical CPU', icon: <Cpu size={14} /> },
-          { id: 'subnet', label: 'Subnet Calculator', icon: <Globe size={14} /> },
-          { id: 'storage', label: 'Storage Capacity', icon: <Database size={14} /> },
+          { id: 'vcpu', label: 'VCPU', icon: <Monitor size={14} /> },
+          { id: 'pcpu', label: 'PCPU', icon: <Cpu size={14} /> },
+          { id: 'subnet', label: 'SUBNET', icon: <Globe size={14} /> },
+          { id: 'storage', label: 'STORAGE', icon: <Database size={14} /> },
         ].map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id as any)}
             className={cn(
-              "flex shrink-0 items-center gap-2 border-b-[2.5px] px-5 py-3 text-[0.8rem] font-bold tracking-wide transition-all",
+              "flex shrink-0 items-center gap-2 border-b-[2.5px] px-5 py-3 text-[0.8rem] font-bold tracking-wide transition-all uppercase",
               activeTab === tab.id ? "border-[var(--accent)] text-[var(--accent)]" : "border-transparent text-[var(--text-sec)] hover:text-[var(--text-primary)]"
             )}
           >
-            {tab.icon}
             {tab.label}
           </button>
         ))}
@@ -683,8 +679,8 @@ export default function App() {
                 <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                   <div className="rounded-[var(--r)] border border-[var(--border)] bg-[var(--bg-card)] p-6 shadow-[var(--shadow)]">
                     <div className="mb-6 font-mono text-[11px] font-bold tracking-[0.15em] uppercase text-[var(--text-sec)]">Capacity Breakdown (GHz)</div>
-                    <div className="h-[240px] w-full">
-                      <ResponsiveContainer width="100%" height="100%">
+                    <div className="min-h-[240px] w-full">
+                      <ResponsiveContainer width="100%" height={240}>
                         <BarChart layout="vertical" data={[{ name: 'CPU', used: vResult.observed, headroom: Math.max(0, vResult.headroom), overflow: Math.max(0, vResult.observed - vResult.capacity) }]} margin={{ left: 20, right: 20, top: 0, bottom: 0 }}>
                           <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="var(--border)" opacity={0.4} />
                           <XAxis type="number" fontSize={10} fontFamily="JetBrains Mono" stroke="var(--text-sec)" />
@@ -703,8 +699,8 @@ export default function App() {
                   </div>
                   <div className="rounded-[var(--r)] border border-[var(--border)] bg-[var(--bg-card)] p-6 shadow-[var(--shadow)]">
                     <div className="mb-6 font-mono text-[11px] font-bold tracking-[0.15em] uppercase text-[var(--text-sec)]">Utilization Share</div>
-                    <div className="h-[240px] w-full">
-                      <ResponsiveContainer width="100%" height="100%">
+                    <div className="min-h-[240px] w-full">
+                      <ResponsiveContainer width="100%" height={240}>
                         <PieChart>
                           <Pie
                             data={[
@@ -738,8 +734,8 @@ export default function App() {
                 {vHistory.length > 1 && (
                   <div className="mt-4 rounded-sm border border-[var(--border)] bg-[var(--bg-card)] p-5 shadow-sm">
                     <div className="mb-3 font-sans text-[10px] font-bold tracking-widest uppercase text-[var(--text-sec)]">Utilization Trend (%)</div>
-                    <div className="h-[180px] w-full">
-                      <ResponsiveContainer width="100%" height="100%">
+                    <div className="min-h-[180px] w-full">
+                      <ResponsiveContainer width="100%" height={180}>
                         <AreaChart data={[...vHistory].reverse()}>
                           <defs>
                             <linearGradient id="trendGradient" x1="0" y1="0" x2="0" y2="1">
@@ -828,7 +824,7 @@ export default function App() {
             <div className="rounded-[var(--r)] border border-[var(--border)] bg-[var(--bg-card)] p-6 shadow-[var(--shadow)]">
               <div className="grid grid-cols-1 gap-4.5 sm:grid-cols-3">
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[0.76rem] font-semibold text-[var(--text-sec)]">Physical Sockets <span className="font-mono text-[0.68rem] font-medium text-[var(--accent)]">integer</span></label>
+                  <label className="text-[0.76rem] font-semibold text-[var(--text-sec)]">Sockets</label>
                   <input 
                     type="number" 
                     value={pInput.sockets}
@@ -838,7 +834,7 @@ export default function App() {
                   />
                 </div>
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[0.76rem] font-semibold text-[var(--text-sec)]">Cores per Socket <span className="font-mono text-[0.68rem] font-medium text-[var(--accent)]">integer</span></label>
+                  <label className="text-[0.76rem] font-semibold text-[var(--text-sec)]">Cores/Socket</label>
                   <input 
                     type="number" 
                     value={pInput.cores}
@@ -848,7 +844,7 @@ export default function App() {
                   />
                 </div>
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[0.76rem] font-semibold text-[var(--text-sec)]">Threads per Core <span className="font-mono text-[0.68rem] font-medium text-[var(--accent)]">integer (HT)</span></label>
+                  <label className="text-[0.76rem] font-semibold text-[var(--text-sec)]">Threads/Core</label>
                   <input 
                     type="number" 
                     value={pInput.threads}
@@ -889,11 +885,11 @@ export default function App() {
                 </div>
               </div>
               <div className="mt-5 flex flex-wrap items-center gap-3">
-                <button onClick={handlePcpuCalc} className="rounded-lg bg-[var(--accent)] px-6 py-2.5 text-[0.85rem] font-bold tracking-wide text-white transition-all hover:opacity-90 active:scale-95">Calculate</button>
+                <button onClick={handlePcpuCalc} className="rounded-lg bg-[var(--accent)] px-6 py-2.5 text-[0.85rem] font-bold tracking-wide text-white transition-all hover:opacity-90 active:scale-95">Calculate Now</button>
                 <button onClick={() => { setPInput({ sockets: '', cores: '', threads: '', freq: '', util: '', tdp: '' }); setPResult(null); }} className="rounded-lg border border-[var(--border)] px-4 py-2.5 text-[0.8rem] font-semibold text-[var(--text-sec)] transition-all hover:bg-[var(--accent-dim)] hover:text-[var(--accent)]">Reset</button>
                 <button 
                   onClick={() => { setPInput({ sockets: '2', cores: '16', threads: '2', freq: '2.9', util: '75', tdp: '205' }); }} 
-                  className="ml-auto rounded-lg border-[1.5px] border-dashed border-[var(--accent)] px-4 py-2.5 font-mono text-[0.72rem] font-medium text-[var(--accent)] transition-all hover:bg-[var(--accent-dim)]"
+                  className="rounded-lg border border-[var(--accent)] px-4 py-2.5 font-mono text-[0.72rem] font-medium text-[var(--accent)] transition-all hover:bg-[var(--accent-dim)]"
                 >
                   Load Sample
                 </button>
@@ -903,13 +899,11 @@ export default function App() {
             {pResult && (
               <div className="mt-7 space-y-4">
                 <div className="font-mono text-[0.67rem] font-bold tracking-[0.12em] uppercase text-[var(--text-sec)]">Results</div>
-                <div className="grid grid-cols-2 gap-3.5 sm:grid-cols-3">
-                  <MetricCard label="Total Physical Cores" value={pResult.totalCores.toString()} unit="cores" />
-                  <MetricCard label="Total Logical CPUs" value={pResult.totalLogical.toString()} unit="threads" />
-                  <MetricCard label="Peak Throughput" value={pResult.peakGhz.toFixed(2)} unit="GHz total" />
-                  <MetricCard label="Used Throughput" value={pResult.usedGhz.toFixed(2)} unit="GHz @ util" />
-                  <MetricCard label="Utilization" value={pResult.utilization.toFixed(2)} unit="percent" status={pResult.status.cls} />
-                  <MetricCard label="Est. Power Draw" value={pResult.estPower ? `${pResult.estPower.toFixed(0)} W` : 'N/A'} unit="Watts" />
+                <div className="grid grid-cols-2 gap-3.5 sm:grid-cols-4">
+                  <MetricCard label="Logical Procs" value={pResult.totalLogical.toString()} unit="threads" />
+                  <MetricCard label="Peak GHz" value={pResult.peakGhz.toFixed(1)} unit="GHz" />
+                  <MetricCard label="Used GHz" value={pResult.usedGhz.toFixed(1)} unit="GHz" />
+                  <MetricCard label="Est Power" value={pResult.estPower ? `${pResult.estPower.toFixed(0)}` : 'N/A'} unit="Watts" />
                 </div>
 
                 <div className="flex flex-wrap items-center gap-4 rounded-[var(--r)] border border-[var(--border)] bg-[var(--bg-card)] px-5 py-4.5 shadow-[var(--shadow)]">
@@ -920,7 +914,7 @@ export default function App() {
                 </div>
 
                 <ProgressBar 
-                  title="CPU Utilization" 
+                  title="Utilization vs Capacity" 
                   pct={pResult.utilization} 
                   status={pResult.status.cls} 
                   thresholds={['0%', 'Normal ≤80%', 'High ≤100%', '↑ Over']} 
@@ -929,8 +923,8 @@ export default function App() {
                 <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                   <div className="rounded-[var(--r)] border border-[var(--border)] bg-[var(--bg-card)] p-6 shadow-[var(--shadow)]">
                     <div className="mb-6 font-mono text-[11px] font-bold tracking-[0.15em] uppercase text-[var(--text-sec)]">Throughput Breakdown (GHz)</div>
-                    <div className="h-[240px] w-full">
-                      <ResponsiveContainer width="100%" height="100%">
+                    <div className="min-h-[240px] w-full">
+                      <ResponsiveContainer width="100%" height={240}>
                         <BarChart layout="vertical" data={[{ name: 'Throughput', used: pResult.usedGhz, headroom: Math.max(0, pResult.peakGhz - pResult.usedGhz) }]} margin={{ left: 20, right: 20, top: 0, bottom: 0 }}>
                           <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="var(--border)" opacity={0.4} />
                           <XAxis type="number" fontSize={10} fontFamily="JetBrains Mono" stroke="var(--text-sec)" />
@@ -948,8 +942,8 @@ export default function App() {
                   </div>
                   <div className="rounded-[var(--r)] border border-[var(--border)] bg-[var(--bg-card)] p-6 shadow-[var(--shadow)]">
                     <div className="mb-6 font-mono text-[11px] font-bold tracking-[0.15em] uppercase text-[var(--text-sec)]">Core Topology</div>
-                    <div className="h-[240px] w-full">
-                      <ResponsiveContainer width="100%" height="100%">
+                    <div className="min-h-[240px] w-full">
+                      <ResponsiveContainer width="100%" height={240}>
                         <PieChart>
                           <Pie
                             data={[
@@ -1300,8 +1294,8 @@ export default function App() {
                 <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                   <div className="rounded-[var(--r)] border border-[var(--border)] bg-[var(--bg-card)] p-6 shadow-[var(--shadow)]">
                     <div className="mb-6 font-mono text-[11px] font-bold tracking-[0.15em] uppercase text-[var(--text-sec)]">Storage Breakdown ({stUnit})</div>
-                    <div className="h-[240px] w-full">
-                      <ResponsiveContainer width="100%" height="100%">
+                    <div className="min-h-[240px] w-full">
+                      <ResponsiveContainer width="100%" height={240}>
                         <BarChart layout="vertical" data={[{ name: 'Storage', used: stResult.used, free: stResult.free, reserve: stResult.usable - stResult.netAvail, parity: stResult.raw - stResult.usable }]} margin={{ left: 20, right: 20, top: 0, bottom: 0 }}>
                           <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="var(--border)" opacity={0.4} />
                           <XAxis type="number" fontSize={10} fontFamily="JetBrains Mono" stroke="var(--text-sec)" />
@@ -1321,8 +1315,8 @@ export default function App() {
                   </div>
                   <div className="rounded-[var(--r)] border border-[var(--border)] bg-[var(--bg-card)] p-6 shadow-[var(--shadow)]">
                     <div className="mb-6 font-mono text-[11px] font-bold tracking-[0.15em] uppercase text-[var(--text-sec)]">Capacity Share</div>
-                    <div className="h-[240px] w-full">
-                      <ResponsiveContainer width="100%" height="100%">
+                    <div className="min-h-[240px] w-full">
+                      <ResponsiveContainer width="100%" height={240}>
                         <PieChart>
                           <Pie
                             data={[
@@ -1360,8 +1354,8 @@ export default function App() {
                 {stHistory.length > 1 && (
                   <div className="mt-4 rounded-sm border border-[var(--border)] bg-[var(--bg-card)] p-5 shadow-sm">
                     <div className="mb-3 font-sans text-[10px] font-bold tracking-widest uppercase text-[var(--text-sec)]">Used Capacity Trend ({stUnit})</div>
-                    <div className="h-[180px] w-full">
-                      <ResponsiveContainer width="100%" height="100%">
+                    <div className="min-h-[180px] w-full">
+                      <ResponsiveContainer width="100%" height={180}>
                         <AreaChart data={[...stHistory].reverse()}>
                           <defs>
                             <linearGradient id="stTrendGradient" x1="0" y1="0" x2="0" y2="1">
