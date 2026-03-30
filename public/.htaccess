@@ -1,0 +1,15 @@
+# IT Infrastructure Capacity Tools - Apache Configuration
+# This file handles SPA routing for Apache/XAMPP servers.
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  
+  # If the requested filename exists, serve it.
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+  
+  # Otherwise, redirect all requests to index.html.
+  RewriteRule ^ index.html [L]
+</IfModule>
